@@ -1,0 +1,92 @@
+theme: jekyll-theme-chirpy
+
+lang: zh-CN
+
+timezone: Asia/Shanghai
+
+title: Qlog
+tagline: "Data Science · XMUM"
+description: "Qlog — Data Science · XMUM"
+
+url: "https://cupidryan2-art.github.io"
+baseurl: "/my-blog"
+
+github:
+  username: cupidryan2-art
+
+social:
+  name: Qlog
+  links:
+    - https://github.com/cupidryan2-art
+
+# Theme mode: light / dark / (empty for auto-switch)
+theme_mode:
+
+avatar: /assets/img/avatar.svg
+
+toc: true
+
+paginate: 10
+
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    css_class: highlight
+    span:
+      line_numbers: false
+    block:
+      line_numbers: true
+      start_line: 1
+
+collections:
+  tabs:
+    output: true
+    sort_by: order
+
+defaults:
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: post
+      comments: false
+      toc: true
+      permalink: /posts/:title/
+  - scope:
+      path: _tabs
+      type: tabs
+    values:
+      layout: page
+      permalink: /:title/
+
+sass:
+  style: compressed
+
+compress_html:
+  clippings: all
+  comments: all
+  endings: all
+  profile: false
+  blanklines: false
+  ignore:
+    envs: [development]
+
+exclude:
+  - "*.gem"
+  - "*.gemspec"
+  - docs
+  - tools
+  - README.md
+  - LICENSE
+  - rollup.config.js
+  - package*.json
+
+jekyll-archives:
+  enabled: [categories, tags]
+  layouts:
+    category: category
+    tag: tag
+  permalinks:
+    tag: /tags/:name/
+    category: /categories/:name/
