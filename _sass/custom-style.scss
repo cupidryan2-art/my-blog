@@ -1,218 +1,449 @@
-/* ===== Qlog — Minimalist Override ===== */
+/* ===== Qlog — Apple-Inspired Design ===== */
 
-/* --- Typography: clean sans-serif --- */
+/* --- Google Fonts: import SF-like font --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* --- Base typography --- */
 :root {
   --font-family-base: "Inter", "SF Pro Display", -apple-system, BlinkMacSystemFont,
     "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   --font-family-heading: var(--font-family-base);
+  --transition-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 body {
-  font-family: var(--font-family-base);
-  letter-spacing: 0.01em;
+  font-family: var(--font-family-base) !important;
+  letter-spacing: -0.01em;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-family-heading);
+  font-family: var(--font-family-heading) !important;
   font-weight: 600;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.03em;
 }
 
-/* --- Light mode palette --- */
+/* ==============================
+   LIGHT MODE — Apple clean white
+   ============================== */
 :root[data-mode="light"],
 :root:not([data-mode]) {
-  --body-bg: #fafafa;
-  --sidebar-bg: #f5f5f5;
-  --text-color: #1a1a1a;
-  --text-muted-color: #888;
-  --heading-color: #111;
-  --link-color: #5a7a9b;
-  --link-underline-color: rgba(90, 122, 155, 0.2);
-  --btn-primary-bg: #5a7a9b;
-  --badge-bg: #e8edf2;
-  --badge-color: #5a7a9b;
-  --border-color: #e5e5e5;
+  --body-bg: #fff;
+  --sidebar-bg: rgba(251, 251, 253, 0.92);
+  --text-color: #1d1d1f;
+  --text-muted-color: #86868b;
+  --heading-color: #1d1d1f;
+  --link-color: #0071e3;
+  --link-underline-color: transparent;
+  --btn-primary-bg: #0071e3;
+  --badge-bg: #f5f5f7;
+  --badge-color: #1d1d1f;
+  --border-color: rgba(0, 0, 0, 0.06);
   --card-bg: #fff;
-  --code-bg: #f0f2f4;
-  --tag-hover: #5a7a9b;
+  --card-hover-bg: #f5f5f7;
+  --code-bg: #f5f5f7;
+  --accent-gradient: linear-gradient(135deg, #0071e3, #40a9ff);
+  --surface-glass: rgba(255, 255, 255, 0.72);
+  --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.06);
 }
 
-/* --- Dark mode palette --- */
+/* ==============================
+   DARK MODE — Apple dark elegance
+   ============================== */
 html[data-mode="dark"] {
-  --body-bg: #111;
-  --sidebar-bg: #0d0d0d;
-  --text-color: #c8c8c8;
-  --text-muted-color: #666;
-  --heading-color: #e0e0e0;
-  --link-color: #7ea8c8;
-  --link-underline-color: rgba(126, 168, 200, 0.2);
-  --btn-primary-bg: #7ea8c8;
-  --badge-bg: #1e2a35;
-  --badge-color: #7ea8c8;
-  --border-color: #222;
-  --card-bg: #161616;
-  --code-bg: #1a1c1e;
-  --tag-hover: #7ea8c8;
+  --body-bg: #000;
+  --sidebar-bg: rgba(22, 22, 24, 0.92);
+  --text-color: #f5f5f7;
+  --text-muted-color: #86868b;
+  --heading-color: #f5f5f7;
+  --link-color: #2997ff;
+  --link-underline-color: transparent;
+  --btn-primary-bg: #2997ff;
+  --badge-bg: #1c1c1e;
+  --badge-color: #f5f5f7;
+  --border-color: rgba(255, 255, 255, 0.08);
+  --card-bg: #000;
+  --card-hover-bg: #1c1c1e;
+  --code-bg: #1c1c1e;
+  --accent-gradient: linear-gradient(135deg, #2997ff, #5ac8fa);
+  --surface-glass: rgba(28, 28, 30, 0.72);
+  --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.4);
 }
 
-/* --- Sidebar: cleaner --- */
+/* ==============================
+   SIDEBAR — frosted glass nav
+   ============================== */
 #sidebar {
   background: var(--sidebar-bg) !important;
-  border-right: 1px solid var(--border-color);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-right: 1px solid var(--border-color) !important;
 
   .site-title {
-    font-weight: 700;
-    font-size: 1.35rem;
-    letter-spacing: -0.02em;
+    font-weight: 700 !important;
+    font-size: 1.5rem !important;
+    letter-spacing: -0.04em;
     color: var(--heading-color) !important;
+    transition: opacity 0.3s var(--transition-smooth);
   }
 
   .site-subtitle {
-    font-size: 0.78rem;
+    font-size: 0.7rem !important;
     color: var(--text-muted-color) !important;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
+    font-weight: 500;
   }
 
-  .nav-link {
-    font-weight: 500;
-    color: var(--text-muted-color) !important;
-    transition: color 0.2s ease;
+  .nav-item {
+    .nav-link {
+      font-weight: 400 !important;
+      font-size: 0.92rem;
+      color: var(--text-muted-color) !important;
+      transition: all 0.3s var(--transition-smooth);
+      border-radius: 8px;
+      margin: 2px 8px;
+      padding: 8px 12px !important;
 
-    &:hover,
-    &.active {
-      color: var(--heading-color) !important;
+      &:hover {
+        color: var(--heading-color) !important;
+        background: var(--card-hover-bg);
+      }
+
+      &.active {
+        color: var(--heading-color) !important;
+        font-weight: 500 !important;
+      }
     }
   }
 }
 
-/* --- Content area --- */
-#main-wrapper {
-  background: var(--body-bg);
+/* --- Avatar: refined --- */
+.avatar {
+  border-radius: 50% !important;
+  border: none !important;
+  box-shadow: var(--shadow-subtle) !important;
+  transition: transform 0.4s var(--transition-smooth),
+              box-shadow 0.4s var(--transition-smooth);
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-hover) !important;
+  }
 }
 
+/* ==============================
+   MAIN CONTENT — spacious & clean
+   ============================== */
+#main-wrapper {
+  background: var(--body-bg) !important;
+}
+
+/* --- Post list: Apple card style --- */
+#post-list {
+  .card-wrapper,
+  .post-preview {
+    padding: 2rem 0 !important;
+    border: none !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    transition: all 0.35s var(--transition-smooth);
+
+    &:hover {
+      background: var(--card-hover-bg) !important;
+      border-radius: 16px !important;
+      padding-left: 1.5rem !important;
+      padding-right: 1.5rem !important;
+      border-bottom-color: transparent !important;
+    }
+
+    .card-title,
+    h1 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--heading-color);
+      transition: color 0.3s;
+    }
+
+    .card-text,
+    .post-content > p {
+      color: var(--text-muted-color);
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+  }
+}
+
+/* --- Card component override --- */
+.card {
+  border: none !important;
+  border-radius: 16px !important;
+  background: var(--card-bg) !important;
+  box-shadow: var(--shadow-subtle) !important;
+  overflow: hidden;
+  transition: all 0.35s var(--transition-smooth);
+
+  &:hover {
+    box-shadow: var(--shadow-hover) !important;
+    transform: translateY(-2px);
+  }
+}
+
+/* ==============================
+   POST CONTENT — editorial feel
+   ============================== */
 .post-content {
-  line-height: 1.8;
+  line-height: 1.85;
   color: var(--text-color);
+  font-size: 1.05rem;
+  font-weight: 400;
 
   p {
-    margin-bottom: 1.4em;
+    margin-bottom: 1.6em;
+  }
+
+  h1 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    margin-top: 3rem;
+    margin-bottom: 1.2rem;
+  }
+
+  h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+    color: var(--heading-color);
+  }
+
+  h3 {
+    font-size: 1.35rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin-top: 2.5rem;
+    margin-bottom: 0.8rem;
   }
 
   a {
     color: var(--link-color);
     text-decoration: none;
-    border-bottom: 1px solid var(--link-underline-color);
-    transition: border-color 0.2s;
+    transition: opacity 0.2s;
 
     &:hover {
-      border-color: var(--link-color);
+      opacity: 0.75;
     }
   }
 
   blockquote {
-    border-left: 3px solid var(--border-color);
+    border-left: 3px solid var(--link-color);
     color: var(--text-muted-color);
-    padding-left: 1.2em;
-    margin-left: 0;
-    font-style: normal;
+    padding: 0.8em 1.5em;
+    margin: 2em 0;
+    background: var(--code-bg);
+    border-radius: 0 12px 12px 0;
+    font-size: 1rem;
+
+    p:last-child {
+      margin-bottom: 0;
+    }
   }
 
   code {
     background: var(--code-bg);
-    border-radius: 4px;
-    padding: 0.15em 0.4em;
-    font-size: 0.88em;
+    border-radius: 6px;
+    padding: 0.2em 0.5em;
+    font-size: 0.85em;
+    font-weight: 500;
+  }
+
+  /* --- Code blocks: sleek --- */
+  .highlight,
+  div.highlight {
+    border-radius: 12px !important;
+    overflow: hidden;
+    box-shadow: var(--shadow-subtle);
+
+    pre {
+      border-radius: 12px !important;
+    }
   }
 
   table {
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     width: 100%;
-
-    th, td {
-      border-bottom: 1px solid var(--border-color);
-      padding: 0.6em 1em;
-      text-align: left;
-    }
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-subtle);
 
     th {
       font-weight: 600;
       color: var(--heading-color);
+      background: var(--code-bg);
+      padding: 0.8em 1.2em;
+      font-size: 0.88rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    td {
+      padding: 0.8em 1.2em;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr {
+      transition: background 0.2s;
+
+      &:hover td {
+        background: var(--card-hover-bg);
+      }
+    }
+  }
+
+  img {
+    border-radius: 12px;
+    box-shadow: var(--shadow-subtle);
+    transition: box-shadow 0.3s var(--transition-smooth);
+
+    &:hover {
+      box-shadow: var(--shadow-hover);
     }
   }
 }
 
-/* --- Tags & badges --- */
+/* --- Post title (single post page) --- */
+.post h1,
+#post-wrapper h1 {
+  font-size: 2.5rem !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.04em;
+  line-height: 1.15;
+  margin-bottom: 0.5rem;
+}
+
+.post-meta {
+  color: var(--text-muted-color) !important;
+  font-size: 0.85rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+/* ==============================
+   TAGS & BADGES — pill style
+   ============================== */
 .tag,
 a[class*="tag"],
 .categories .card-body a,
 .post-tag {
   background: var(--badge-bg) !important;
   color: var(--badge-color) !important;
-  border: none !important;
-  border-radius: 4px;
-  font-size: 0.8rem;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 980px !important;
+  font-size: 0.78rem;
   font-weight: 500;
-  padding: 0.2em 0.6em;
-  transition: opacity 0.2s;
+  padding: 0.25em 0.85em;
+  transition: all 0.3s var(--transition-smooth);
+  display: inline-block;
 
   &:hover {
-    opacity: 0.8;
+    background: var(--card-hover-bg) !important;
+    border-color: var(--link-color) !important;
+    color: var(--link-color) !important;
+    transform: translateY(-1px);
   }
 }
 
-/* --- Post list cards: minimal --- */
-.card,
-.post-preview {
-  border: none;
-  border-bottom: 1px solid var(--border-color);
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none !important;
+/* ==============================
+   SEARCH — Apple spotlight style
+   ============================== */
+#search-wrapper {
+  #search-input {
+    border: 1px solid var(--border-color) !important;
+    border-radius: 980px !important;
+    background: var(--code-bg) !important;
+    box-shadow: none !important;
+    padding: 10px 20px !important;
+    font-size: 0.92rem;
+    transition: all 0.3s var(--transition-smooth);
+
+    &:focus {
+      border-color: var(--link-color) !important;
+      box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.12) !important;
+      background: var(--card-bg) !important;
+    }
+  }
+}
+
+/* ==============================
+   MODE TOGGLE — subtle
+   ============================== */
+.mode-toggle {
+  color: var(--text-muted-color) !important;
+  transition: all 0.3s var(--transition-smooth);
 
   &:hover {
-    background: var(--card-bg);
+    color: var(--heading-color) !important;
+    transform: rotate(15deg);
   }
 }
 
-/* --- Avatar --- */
-.avatar {
-  border-radius: 50%;
-  border: 2px solid var(--border-color) !important;
-  box-shadow: none !important;
-}
-
-/* --- Spacing: generous whitespace --- */
-#post-list {
-  .post-preview {
-    padding: 1.6rem 0;
-  }
-}
-
-.post-content {
-  padding-top: 1rem;
-
-  h2 {
-    margin-top: 2.5rem;
-    margin-bottom: 1rem;
-  }
-
-  h3 {
-    margin-top: 2rem;
-    margin-bottom: 0.8rem;
-  }
-}
-
-/* --- Footer: quieter --- */
+/* ==============================
+   FOOTER — whisper quiet
+   ============================== */
 #tail-wrapper,
 footer {
-  color: var(--text-muted-color);
-  font-size: 0.8rem;
+  color: var(--text-muted-color) !important;
+  font-size: 0.75rem;
+  letter-spacing: 0.01em;
+
+  a {
+    color: var(--text-muted-color) !important;
+    transition: color 0.2s;
+
+    &:hover {
+      color: var(--link-color) !important;
+    }
+  }
 }
 
-/* --- Scrollbar (webkit) --- */
+/* ==============================
+   TOC — refined sidebar nav
+   ============================== */
+#toc-wrapper {
+  li a {
+    font-size: 0.85rem;
+    color: var(--text-muted-color);
+    transition: color 0.2s;
+    border-left: 2px solid transparent;
+
+    &:hover,
+    &.active {
+      color: var(--link-color);
+      border-left-color: var(--link-color);
+    }
+  }
+}
+
+/* ==============================
+   SCROLLBAR — invisible until hover
+   ============================== */
 ::-webkit-scrollbar {
   width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -220,27 +451,134 @@ footer {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border-color);
-  border-radius: 3px;
-}
+  background: rgba(128, 128, 128, 0.2);
+  border-radius: 980px;
+  transition: background 0.2s;
 
-/* --- Search input --- */
-#search-input {
-  border: 1px solid var(--border-color) !important;
-  border-radius: 6px;
-  background: var(--card-bg) !important;
-  box-shadow: none !important;
-
-  &:focus {
-    border-color: var(--link-color) !important;
+  &:hover {
+    background: rgba(128, 128, 128, 0.4);
   }
 }
 
-/* --- Mode toggle button --- */
-.mode-toggle {
-  color: var(--text-muted-color) !important;
+/* ==============================
+   SELECTION — branded highlight
+   ============================== */
+::selection {
+  background: rgba(0, 113, 227, 0.15);
+  color: inherit;
+}
+
+html[data-mode="dark"] ::selection {
+  background: rgba(41, 151, 255, 0.2);
+}
+
+/* ==============================
+   ANIMATIONS — subtle entrance
+   ============================== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#main-wrapper {
+  animation: fadeInUp 0.5s var(--transition-smooth);
+}
+
+.post-content {
+  animation: fadeInUp 0.6s var(--transition-smooth);
+}
+
+/* ==============================
+   CATEGORIES & ARCHIVES pages
+   ============================== */
+.categories,
+.tags,
+#archives {
+  .card-header {
+    background: transparent !important;
+    border-bottom: 1px solid var(--border-color);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .list-group-item {
+    background: transparent !important;
+    border-color: var(--border-color) !important;
+    transition: all 0.2s;
+
+    &:hover {
+      padding-left: 1.5rem;
+      color: var(--link-color);
+    }
+  }
+}
+
+/* --- Timeline dots (archives) --- */
+#archives {
+  .timeline-header {
+    font-size: 1.4rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+}
+
+/* ==============================
+   BACK TO TOP — pill button
+   ============================== */
+#back-to-top {
+  border-radius: 980px !important;
+  box-shadow: var(--shadow-hover) !important;
+  transition: all 0.3s var(--transition-smooth);
 
   &:hover {
-    color: var(--heading-color) !important;
+    transform: translateY(-3px);
+  }
+}
+
+/* ==============================
+   PAGINATION — clean links
+   ============================== */
+.pagination {
+  .page-link {
+    border: none !important;
+    border-radius: 8px;
+    color: var(--text-muted-color);
+    font-weight: 500;
+    transition: all 0.2s;
+
+    &:hover {
+      background: var(--card-hover-bg);
+      color: var(--heading-color);
+    }
+
+    &.active {
+      background: var(--link-color) !important;
+      color: #fff !important;
+    }
+  }
+}
+
+/* ==============================
+   RESPONSIVE refinements
+   ============================== */
+@media (max-width: 849px) {
+  #sidebar {
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+  }
+
+  .post-content h2 {
+    font-size: 1.5rem;
+  }
+
+  .post h1,
+  #post-wrapper h1 {
+    font-size: 2rem !important;
   }
 }
