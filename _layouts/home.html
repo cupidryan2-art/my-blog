@@ -1,0 +1,39 @@
+---
+layout: default
+---
+
+<!-- ===== Hero Section ===== -->
+<section class="qlog-hero">
+  <p class="hero-label">DATA SCIENCE · XMUM</p>
+  <h1 class="hero-title">Thoughts, data,<br>and <em>code.</em></h1>
+  <blockquote class="hero-quote">
+    <p>灵台方寸，未敢随时俯仰。</p>
+  </blockquote>
+  <p class="hero-sub">A quiet place to think out loud.</p>
+  <div class="hero-actions">
+    <a href="{{ '/archives/' | relative_url }}" class="btn-hero btn-primary-hero">Read</a>
+    <a href="{{ '/about/' | relative_url }}" class="btn-hero btn-outline-hero">About</a>
+  </div>
+</section>
+
+<hr class="hero-divider">
+
+<!-- ===== Recent Posts ===== -->
+<section class="qlog-posts">
+  <h2 class="posts-heading">Recent Posts</h2>
+
+  {% for post in site.posts limit:10 %}
+  <article class="post-card">
+    <a href="{{ post.url | relative_url }}" class="post-card-link">
+      <h3 class="post-card-title">{{ post.title }}</h3>
+      <p class="post-card-excerpt">{{ post.excerpt | strip_html | truncate: 160 }}</p>
+      <div class="post-card-meta">
+        <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%Y/%m/%d" }}</time>
+        {% for cat in post.categories %}
+        <span class="post-card-cat">{{ cat }}</span>
+        {% endfor %}
+      </div>
+    </a>
+  </article>
+  {% endfor %}
+</section>
