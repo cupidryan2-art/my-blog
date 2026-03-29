@@ -2,6 +2,8 @@
 layout: default
 ---
 
+{% include font-sizer.html %}
+
 <article class="qlog-post">
   <header class="post-header-editorial">
     <p class="page-label">
@@ -25,13 +27,35 @@ layout: default
     {{ content }}
   </div>
 
-  {% if page.tags.size > 0 %}
   <footer class="post-footer-editorial">
+    {% if page.tags.size > 0 %}
     <div class="post-tags-footer">
       {% for tag in page.tags %}
       <a href="{{ '/tags/' | append: tag | downcase | replace: ' ', '-' | relative_url }}" class="tag-pill-sm">{{ tag }}</a>
       {% endfor %}
     </div>
+    {% endif %}
+
+    {% include share-buttons.html %}
   </footer>
-  {% endif %}
 </article>
+
+<!-- Giscus Comments -->
+<section class="qlog-comments">
+  <h2 class="comments-heading">Comments</h2>
+  <script src="https://giscus.app/client.js"
+    data-repo="cupidryan2-art/my-blog"
+    data-repo-id=""
+    data-category="General"
+    data-category-id=""
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="top"
+    data-theme="preferred_color_scheme"
+    data-lang="zh-CN"
+    crossorigin="anonymous"
+    async>
+  </script>
+</section>
