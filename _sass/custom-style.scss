@@ -1,7 +1,6 @@
 /* ===== Qlog — Editorial Premium Design ===== */
 
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@300;400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=LXGW+WenKai:wght@300;400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
@@ -11,8 +10,8 @@
    ============================== */
 :root {
   --ff-sans: "Inter", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
-  --ff-body: "EB Garamond", "LXGW WenKai", "Georgia", serif;
-  --ff-serif: "Cormorant Garamond", "LXGW WenKai TC", "Georgia", serif;
+  --ff-body: "Playfair Display", "LXGW WenKai", "Georgia", serif;
+  --ff-serif: "Playfair Display", "LXGW WenKai TC", "Georgia", serif;
   --ff-serif-cjk: "LXGW WenKai TC", "LXGW WenKai", serif;
   --ff-cjk: "LXGW WenKai", "LXGW WenKai TC", serif;
   --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
@@ -112,14 +111,13 @@ html[data-mode="dark"] ::selection {
     font-family: var(--ff-serif) !important;
     font-size: 1.5rem !important;
     font-weight: 700 !important;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
     color: var(--text-1) !important;
-    font-style: italic;
   }
 
   .site-subtitle {
     font-family: var(--ff-sans) !important;
-    font-size: 0.6rem !important;
+    font-size: 0.62rem !important;
     font-weight: 400 !important;
     color: var(--text-3) !important;
     letter-spacing: 0.14em;
@@ -127,14 +125,15 @@ html[data-mode="dark"] ::selection {
   }
 
   .avatar {
-    width: 52px !important;
-    height: 52px !important;
+    width: 56px !important;
+    height: 56px !important;
     border: none !important;
     box-shadow: none !important;
   }
 
   .nav-item .nav-link {
-    font-size: 0.86rem !important;
+    font-family: var(--ff-sans) !important;
+    font-size: 0.95rem !important;
     font-weight: 400 !important;
     color: var(--text-2) !important;
     transition: color 0.2s var(--ease);
@@ -557,6 +556,12 @@ html[data-mode="dark"] ::selection {
       font-size: 0.75rem;
       color: var(--text-3);
       font-weight: 400;
+      text-decoration: none;
+      transition: color 0.2s;
+
+      &:hover {
+        color: var(--text-1);
+      }
     }
   }
 
@@ -578,9 +583,17 @@ html[data-mode="dark"] ::selection {
   background: var(--bg-alt);
   color: var(--text-2);
   border-radius: var(--r-pill);
-  font-size: 0.75rem;
+  font-family: var(--ff-sans);
+  font-size: 0.78rem;
   font-weight: 500;
-  padding: 0.25em 0.7em;
+  padding: 0.3em 0.8em;
+  text-decoration: none;
+  transition: all 0.2s var(--ease);
+
+  &:hover {
+    background: var(--bg-hover);
+    color: var(--text-1);
+  }
 }
 
 /* Chirpy's default post layout (fallback) */

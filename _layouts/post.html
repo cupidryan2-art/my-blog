@@ -13,7 +13,7 @@ layout: default
       {% if page.tags.size > 0 %}
       <span class="meta-sep">·</span>
       {% for tag in page.tags %}
-      <span class="post-tag-inline">{{ tag }}</span>
+      <a href="{{ '/tags/' | append: tag | downcase | replace: ' ', '-' | relative_url }}" class="post-tag-inline">{{ tag }}</a>
       {% endfor %}
       {% endif %}
     </div>
@@ -29,7 +29,7 @@ layout: default
   <footer class="post-footer-editorial">
     <div class="post-tags-footer">
       {% for tag in page.tags %}
-      <span class="tag-pill-sm">{{ tag }}</span>
+      <a href="{{ '/tags/' | append: tag | downcase | replace: ' ', '-' | relative_url }}" class="tag-pill-sm">{{ tag }}</a>
       {% endfor %}
     </div>
   </footer>
