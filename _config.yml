@@ -84,7 +84,7 @@ exclude:
 
 # Twikoo comments (fill envId after deploying)
 twikoo:
-  envId: ""
+  envId: "https://twikoo-backend-liart.vercel.app"
 
 jekyll-archives:
   enabled: [categories, tags]
