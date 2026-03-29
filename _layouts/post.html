@@ -41,22 +41,16 @@ layout: default
   </footer>
 </article>
 
-<!-- Giscus Comments -->
+<!-- Twikoo Comments -->
 <section class="qlog-comments">
   <h2 class="comments-heading">Comments</h2>
-  <script src="https://giscus.app/client.js"
-    data-repo="cupidryan2-art/my-blog"
-    data-repo-id="R_kgDOQiPxIg"
-    data-category="General"
-    data-category-id="DIC_kwDOQiPxIs4C5g37"
-    data-mapping="pathname"
-    data-strict="0"
-    data-reactions-enabled="1"
-    data-emit-metadata="0"
-    data-input-position="top"
-    data-theme="preferred_color_scheme"
-    data-lang="zh-CN"
-    crossorigin="anonymous"
-    async>
+  <div id="tcomment"></div>
+  <script src="https://cdn.jsdelivr.net/npm/twikoo@1.6.39/dist/twikoo.all.min.js"></script>
+  <script>
+    twikoo.init({
+      envId: '{{ site.twikoo.envId }}',
+      el: '#tcomment',
+      lang: 'zh-CN'
+    });
   </script>
 </section>
