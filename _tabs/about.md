@@ -21,7 +21,7 @@ title: About
   <div class="about-card">
     <p class="card-label">EDUCATION</p>
     <h3>Xiamen University Malaysia</h3>
-    <p class="card-detail">B.Sc. Data Science & Big Data Technology</p>
+    <p class="card-detail">B.Sc. Data Science</p>
     <p class="card-meta">Sepang, Malaysia · 2025 → Present</p>
   </div>
 
@@ -29,18 +29,14 @@ title: About
     <p class="card-label">INTERESTS</p>
     <h3>What I Care About</h3>
     <div class="interest-tags">
-      <span>Machine Learning</span>
-      <span>Data Visualization</span>
-      <span>Web Development</span>
-      <span>Photography</span>
-      <span>Creative Coding</span>
+      <span>AI</span>
     </div>
   </div>
 
   <div class="about-card about-card-wide">
     <p class="card-label">COLOPHON</p>
     <h3>About This Site</h3>
-    <p class="card-detail">Built with Jekyll + Chirpy, styled with custom CSS, deployed on GitHub Pages. The typeface is Playfair Display for English and LXGW WenKai for Chinese. Designed to be minimal, readable, and quiet.</p>
+    <p class="card-detail">自娱自乐的网站。</p>
   </div>
 </div>
 
