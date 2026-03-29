@@ -4,6 +4,6 @@ _site/
 .jekyll-metadata
 vendor/
 .bundle/
-Gemfile.lock
+# Gemfile.lock tracked for reproducible Vercel builds
 node_modules/
 .DS_Store
