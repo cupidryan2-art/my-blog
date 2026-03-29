@@ -788,8 +788,12 @@ a[class*="tag"],
 }
 
 /* ==============================
-   SEARCH
+   SEARCH — leave room for font sizer
    ============================== */
+#search-wrapper {
+  margin-right: 120px;
+}
+
 #search-wrapper #search-input {
   border: none !important;
   border-radius: var(--r-md) !important;
@@ -918,17 +922,37 @@ footer a {
   }
 
   .font-sizer {
-    top: 0.6rem;
+    top: 0.5rem;
     right: 0.8rem;
+    padding: 3px 8px;
 
-    .fs-slider { width: 60px; }
+    .fs-slider { width: 45px; }
+    .fs-label { font-size: 0.6rem; }
+    .fs-label-lg { font-size: 0.8rem !important; }
   }
 
   .sidebar-social {
     position: static;
     width: auto;
-    justify-content: flex-start;
+    justify-content: center;
     padding: 0;
+    gap: 1rem;
+  }
+
+  .share-bar {
+    justify-content: center;
+    gap: 1rem;
+
+    .share-btn {
+      width: 36px;
+      height: 36px;
+    }
+  }
+
+  /* Chirpy topbar search — prevent overlap */
+  #topbar-wrapper,
+  #topbar {
+    padding-right: 100px !important;
   }
 
   .about-grid {
@@ -953,15 +977,15 @@ footer a {
    ============================== */
 .font-sizer {
   position: fixed;
-  top: 1rem;
-  right: 2rem;
-  z-index: 1000;
-  display: flex;
+  top: 0.7rem;
+  right: 1.5rem;
+  z-index: 1050;
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   background: var(--bg);
   border-radius: var(--r-pill);
-  padding: 4px 12px;
+  padding: 5px 10px;
 
   .fs-label {
     font-family: var(--ff-serif);
@@ -1013,25 +1037,26 @@ footer a {
 }
 
 /* ==============================
-   SIDEBAR SOCIAL — next to mode toggle
+   SIDEBAR SOCIAL — same row as mode toggle
    ============================== */
 .sidebar-social {
   position: fixed;
   left: 0;
-  bottom: 3.5rem;
+  bottom: 1.2rem;
   width: var(--sidebar-width, 260px);
   display: flex;
   justify-content: center;
-  gap: 0.8rem;
-  padding: 0.5rem 0;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0 1rem;
   z-index: 100;
 
   .sidebar-social-icon {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     color: var(--text-3);
     text-decoration: none;
@@ -1041,6 +1066,15 @@ footer a {
       color: var(--text-1);
     }
   }
+}
+
+/* Push mode-toggle left, social icons right — same row */
+#sidebar .sidebar-bottom,
+#sidebar > :last-child {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 /* ==============================

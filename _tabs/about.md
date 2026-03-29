@@ -7,7 +7,7 @@ title: About
 
 <div class="about-hero">
   <div class="about-intro">
-    <h2 class="about-name">Cupid <em>Ryan</em></h2>
+    <h2 class="about-name">Ruijie <em>Qiu</em></h2>
     <p class="about-role">Data Science · XMUM</p>
     <p class="about-bio">Exploring the intersection of data, design, and storytelling. I believe in the power of clean code and clear thinking.</p>
     <div class="about-links">
@@ -22,7 +22,7 @@ title: About
     <p class="card-label">EDUCATION</p>
     <h3>Xiamen University Malaysia</h3>
     <p class="card-detail">B.Sc. Data Science & Big Data Technology</p>
-    <p class="card-meta">Sepang, Malaysia · 2023 → Present</p>
+    <p class="card-meta">Sepang, Malaysia · 2025 → Present</p>
   </div>
 
   <div class="about-card">
