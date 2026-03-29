@@ -1,0 +1,29 @@
+---
+layout: default
+---
+
+<section class="qlog-page">
+  <header class="page-header-editorial">
+    <p class="page-label">ALL POSTS</p>
+    <h1 class="page-title-editorial">Archives</h1>
+  </header>
+  <hr class="page-divider">
+  <div class="page-body">
+    {% assign posts_by_year = site.posts | group_by_exp: "post", "post.date | date: '%Y'" %}
+    {% for year in posts_by_year %}
+    <div class="archive-year">
+      <h2 class="year-heading">{{ year.name }}</h2>
+      <ul class="post-list-clean">
+        {% for post in year.items %}
+        <li>
+          <a href="{{ post.url | relative_url }}" class="post-list-link">
+            <span class="post-list-title">{{ post.title }}</span>
+            <time>{{ post.date | date: "%m/%d" }}</time>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endfor %}
+  </div>
+</section>

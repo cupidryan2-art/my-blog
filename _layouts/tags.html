@@ -1,0 +1,36 @@
+---
+layout: default
+---
+
+<section class="qlog-page">
+  <header class="page-header-editorial">
+    <p class="page-label">BROWSE BY</p>
+    <h1 class="page-title-editorial">Tags</h1>
+  </header>
+  <hr class="page-divider">
+  <div class="page-body">
+    <div class="tag-cloud">
+      {% for tag in site.tags %}
+      <a href="#{{ tag[0] | slugify }}" class="tag-pill">
+        {{ tag[0] }} <span class="tag-count">{{ tag[1].size }}</span>
+      </a>
+      {% endfor %}
+    </div>
+
+    {% for tag in site.tags %}
+    <div class="tag-section" id="{{ tag[0] | slugify }}">
+      <h2 class="tag-name"># {{ tag[0] }}</h2>
+      <ul class="post-list-clean">
+        {% for post in tag[1] %}
+        <li>
+          <a href="{{ post.url | relative_url }}" class="post-list-link">
+            <span class="post-list-title">{{ post.title }}</span>
+            <time>{{ post.date | date: "%Y/%m/%d" }}</time>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endfor %}
+  </div>
+</section>

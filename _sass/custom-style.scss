@@ -2,13 +2,15 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700;1,800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap');
 
 /* ==============================
    TOKENS
    ============================== */
 :root {
   --ff-sans: "Inter", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
-  --ff-serif: "Playfair Display", "Georgia", "Noto Serif SC", serif;
+  --ff-serif: "Playfair Display", "Georgia", serif;
+  --ff-serif-cjk: "Noto Serif SC", "Songti SC", "SimSun", serif;
   --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
   --r-sm: 6px;
   --r-md: 10px;
@@ -22,7 +24,7 @@
 :root:not([data-mode]) {
   --bg: #fafafa;
   --bg-alt: #f2f2f5;
-  --bg-hover: #f5f5f7;
+  --bg-hover: #f0f0f2;
   --text-1: #1d1d1f;
   --text-2: #6e6e73;
   --text-3: #aeaeb2;
@@ -95,7 +97,7 @@ html[data-mode="dark"] ::selection {
 }
 
 /* ==============================
-   SIDEBAR — refined
+   SIDEBAR
    ============================== */
 #sidebar {
   background: var(--sidebar-bg, #fff) !important;
@@ -156,7 +158,178 @@ html[data-mode="dark"] ::selection {
 }
 
 /* ==============================
-   HERO SECTION
+   SHARED PAGE HEADER (all pages)
+   ============================== */
+.page-label {
+  font-family: var(--ff-sans) !important;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 1.2rem;
+}
+
+.page-title-editorial,
+.post-title-editorial {
+  font-family: var(--ff-serif) !important;
+  font-size: 2.8rem !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.03em;
+  line-height: 1.12;
+  color: var(--text-1);
+  margin: 0 0 1.5rem 0;
+}
+
+.page-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 0 0 2.5rem 0;
+}
+
+/* ==============================
+   QLOG-PAGE (categories, tags, archives, about)
+   ============================== */
+.qlog-page {
+  max-width: 680px;
+  animation: fadeUp 0.5s var(--ease);
+
+  .page-header-editorial {
+    padding: 4rem 0 0;
+  }
+
+  .page-body {
+    padding-bottom: 4rem;
+    line-height: 1.8;
+    color: var(--text-1);
+    font-size: 0.95rem;
+
+    /* About page paragraphs */
+    > p {
+      margin-bottom: 1.4em;
+      color: var(--text-2);
+      font-size: 1rem;
+      line-height: 1.85;
+    }
+
+    > h2 {
+      font-family: var(--ff-sans) !important;
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-top: 2.5rem;
+      margin-bottom: 0.8rem;
+      color: var(--text-1);
+    }
+  }
+}
+
+/* --- Category / Tag sections --- */
+.category-section,
+.tag-section,
+.archive-year {
+  margin-bottom: 2.5rem;
+}
+
+.category-name,
+.tag-name,
+.year-heading {
+  font-family: var(--ff-sans) !important;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-1);
+  margin-bottom: 1rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.category-count,
+.tag-count {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--text-3);
+  margin-left: 0.4rem;
+}
+
+/* --- Tag cloud --- */
+.tag-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 3rem;
+}
+
+.tag-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: var(--bg-alt);
+  color: var(--text-2);
+  border: none;
+  border-radius: var(--r-pill);
+  font-size: 0.82rem;
+  font-weight: 500;
+  padding: 0.35em 0.9em;
+  text-decoration: none;
+  transition: all 0.2s var(--ease);
+
+  .tag-count {
+    font-size: 0.7rem;
+    color: var(--text-3);
+    margin-left: 0;
+  }
+
+  &:hover {
+    background: var(--bg-hover);
+    color: var(--text-1);
+  }
+}
+
+/* --- Shared post list --- */
+.post-list-clean {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  li {
+    margin: 0;
+  }
+
+  .post-list-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0.75rem 0.8rem;
+    border-radius: var(--r-md);
+    text-decoration: none !important;
+    transition: background 0.2s var(--ease);
+    gap: 1.5rem;
+
+    &:hover {
+      background: var(--bg-hover);
+    }
+
+    .post-list-title {
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--text-1);
+      line-height: 1.4;
+      flex: 1;
+    }
+
+    time {
+      font-size: 0.78rem;
+      color: var(--text-3);
+      font-weight: 400;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+  }
+}
+
+/* ==============================
+   HERO SECTION (homepage)
    ============================== */
 .qlog-hero {
   padding: 4.5rem 0 3rem;
@@ -193,12 +366,16 @@ html[data-mode="dark"] ::selection {
     background: none;
 
     p {
+      font-family: var(--ff-serif-cjk);
       font-size: 1.05rem;
       color: var(--text-2);
-      font-style: normal;
-      letter-spacing: 0.03em;
+      letter-spacing: 0.06em;
       margin: 0;
       line-height: 1.8;
+
+      em {
+        font-style: italic;
+      }
     }
   }
 
@@ -313,9 +490,7 @@ html[data-mode="dark"] ::selection {
     align-items: center;
     gap: 0.6rem;
 
-    time {
-      font-weight: 400;
-    }
+    time { font-weight: 400; }
   }
 
   .post-card-cat {
@@ -329,34 +504,70 @@ html[data-mode="dark"] ::selection {
 }
 
 /* ==============================
-   CHIRPY POST LIST (fallback)
+   SINGLE POST — editorial
    ============================== */
-#post-list {
-  .card-wrapper,
-  .post-preview,
-  > div,
-  > article {
-    border: none !important;
-    border-radius: var(--r-md) !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    transition: background 0.25s var(--ease);
+.qlog-post {
+  max-width: 680px;
+  animation: fadeUp 0.5s var(--ease);
 
-    &:hover {
-      background: var(--bg-hover) !important;
+  .post-header-editorial {
+    padding: 4rem 0 0;
+  }
+
+  .post-title-editorial {
+    font-family: var(--ff-serif) !important;
+    font-size: 2.6rem !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.035em;
+    line-height: 1.15;
+    color: var(--text-1);
+    margin: 0 0 1.2rem 0;
+  }
+
+  .post-meta-editorial {
+    font-size: 0.82rem;
+    color: var(--text-3);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+
+    .meta-sep {
+      color: var(--text-3);
+    }
+
+    .post-tag-inline {
+      font-size: 0.75rem;
+      color: var(--text-3);
+      font-weight: 400;
     }
   }
 
-  .card {
-    border: none !important;
-    background: transparent !important;
-    box-shadow: none !important;
+  .post-footer-editorial {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+
+    .post-tags-footer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
   }
 }
 
-/* ==============================
-   SINGLE POST — editorial
-   ============================== */
+.tag-pill-sm {
+  display: inline-block;
+  background: var(--bg-alt);
+  color: var(--text-2);
+  border-radius: var(--r-pill);
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.25em 0.7em;
+}
+
+/* Chirpy's default post layout (fallback) */
 .post h1,
 #post-wrapper h1 {
   font-family: var(--ff-serif) !important;
@@ -365,7 +576,6 @@ html[data-mode="dark"] ::selection {
   letter-spacing: -0.035em;
   line-height: 1.15;
   color: var(--text-1);
-  margin-bottom: 0.5rem;
 }
 
 .post-meta {
@@ -373,6 +583,7 @@ html[data-mode="dark"] ::selection {
   font-size: 0.8rem;
 }
 
+/* Post body content */
 .post-content {
   line-height: 1.82;
   color: var(--text-1);
@@ -469,30 +680,34 @@ html[data-mode="dark"] ::selection {
 }
 
 /* ==============================
-   TAGS & BADGES
+   CHIRPY DEFAULT OVERRIDES
    ============================== */
-.post-tag, .tag,
-a[class*="tag"],
-.categories .card-body a,
-#tags a, #categories a {
-  background: var(--bg-alt) !important;
-  color: var(--text-2) !important;
-  border: none !important;
-  border-radius: var(--r-pill) !important;
-  font-size: 0.73rem !important;
-  font-weight: 500;
-  padding: 0.2em 0.7em !important;
-  transition: all 0.2s var(--ease);
 
-  &:hover {
-    color: var(--text-1) !important;
-    background: var(--bg-hover) !important;
+/* Kill Chirpy's default post-list cards */
+#post-list {
+  .card-wrapper,
+  .post-preview,
+  > div,
+  > article {
+    border: none !important;
+    border-radius: var(--r-md) !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    transition: background 0.25s var(--ease);
+
+    &:hover {
+      background: var(--bg-hover) !important;
+    }
+  }
+
+  .card {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
   }
 }
 
-/* ==============================
-   CATEGORIES / TAGS / ARCHIVES
-   ============================== */
+/* Override Chirpy's categories/tags/archives pages */
 .categories, .tags,
 #archives, #categories, #tags {
   .card {
@@ -520,6 +735,25 @@ a[class*="tag"],
 
     &:hover { color: var(--text-1); }
     &:last-child { border-bottom: none !important; }
+  }
+}
+
+/* Tags / badges (global) */
+.post-tag, .tag,
+a[class*="tag"],
+.categories .card-body a {
+  background: var(--bg-alt) !important;
+  color: var(--text-2) !important;
+  border: none !important;
+  border-radius: var(--r-pill) !important;
+  font-size: 0.73rem !important;
+  font-weight: 500;
+  padding: 0.2em 0.7em !important;
+  transition: all 0.2s var(--ease);
+
+  &:hover {
+    color: var(--text-1) !important;
+    background: var(--bg-hover) !important;
   }
 }
 
@@ -619,6 +853,15 @@ a[class*="tag"],
     .hero-title {
       font-size: 2.2rem !important;
     }
+  }
+
+  .page-title-editorial,
+  .post-title-editorial {
+    font-size: 2rem !important;
+  }
+
+  .qlog-post .post-title-editorial {
+    font-size: 1.9rem !important;
   }
 
   .post h1,

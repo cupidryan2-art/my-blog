@@ -1,0 +1,31 @@
+---
+layout: default
+---
+
+<section class="qlog-page">
+  <header class="page-header-editorial">
+    <p class="page-label">BROWSE BY</p>
+    <h1 class="page-title-editorial">Categories</h1>
+  </header>
+  <hr class="page-divider">
+  <div class="page-body">
+    {% for category in site.categories %}
+    <div class="category-section">
+      <h2 class="category-name">
+        {{ category[0] }}
+        <span class="category-count">{{ category[1].size }}</span>
+      </h2>
+      <ul class="post-list-clean">
+        {% for post in category[1] %}
+        <li>
+          <a href="{{ post.url | relative_url }}" class="post-list-link">
+            <span class="post-list-title">{{ post.title }}</span>
+            <time>{{ post.date | date: "%Y/%m/%d" }}</time>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endfor %}
+  </div>
+</section>
