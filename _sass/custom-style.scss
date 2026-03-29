@@ -788,10 +788,10 @@ a[class*="tag"],
 }
 
 /* ==============================
-   SEARCH — leave room for font sizer
+   SEARCH — full width, font sizer is now in sidebar
    ============================== */
 #search-wrapper {
-  margin-right: 120px;
+  margin-right: 0;
 }
 
 #search-wrapper #search-input {
@@ -922,20 +922,15 @@ footer a {
   }
 
   .font-sizer {
-    top: 0.5rem;
-    right: 0.8rem;
-    padding: 3px 8px;
-
-    .fs-slider { width: 45px; }
-    .fs-label { font-size: 0.6rem; }
-    .fs-label-lg { font-size: 0.8rem !important; }
+    padding: 4px 1rem;
+    .fs-slider { width: 60px; }
+    .fs-label { font-size: 0.65rem; }
+    .fs-label-lg { font-size: 0.85rem !important; }
   }
 
   .sidebar-social {
-    position: static;
-    width: auto;
     justify-content: center;
-    padding: 0;
+    padding: 0.4rem 1rem;
     gap: 1rem;
   }
 
@@ -949,11 +944,6 @@ footer a {
     }
   }
 
-  /* Chirpy topbar search — prevent overlap */
-  #topbar-wrapper,
-  #topbar {
-    padding-right: 100px !important;
-  }
 
   .about-grid {
     grid-template-columns: 1fr !important;
@@ -973,19 +963,17 @@ footer a {
 }
 
 /* ==============================
-   FONT SIZE ADJUSTER — slider
+   FONT SIZE ADJUSTER — lives in sidebar, never in topbar
    ============================== */
 .font-sizer {
-  position: fixed;
-  top: 0.7rem;
-  right: 1.5rem;
-  z-index: 1050;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  background: var(--bg);
+  gap: 6px;
+  background: transparent;
   border-radius: var(--r-pill);
-  padding: 5px 10px;
+  padding: 6px 1.2rem;
+  width: 100%;
+  box-sizing: border-box;
 
   .fs-label {
     font-family: var(--ff-serif);
@@ -1037,19 +1025,16 @@ footer a {
 }
 
 /* ==============================
-   SIDEBAR SOCIAL — same row as mode toggle
+   SIDEBAR SOCIAL — sits in sidebar flow, above mode toggle
    ============================== */
 .sidebar-social {
-  position: fixed;
-  left: 0;
-  bottom: 1.2rem;
-  width: var(--sidebar-width, 260px);
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 0.7rem;
-  padding: 0 1rem;
-  z-index: 100;
+  gap: 0.8rem;
+  padding: 0.5rem 1.2rem;
+  width: 100%;
+  box-sizing: border-box;
 
   .sidebar-social-icon {
     display: inline-flex;
@@ -1068,14 +1053,7 @@ footer a {
   }
 }
 
-/* Push mode-toggle left, social icons right — same row */
-#sidebar .sidebar-bottom,
-#sidebar > :last-child {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-}
+/* Sidebar bottom area — Chirpy controls its layout, we don't interfere */
 
 /* ==============================
    SHARE BUTTONS — bottom right of post

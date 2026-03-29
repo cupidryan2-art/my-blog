@@ -1,19 +1,43 @@
-<div class="font-sizer" id="fontSizer">
+<div class="font-sizer" id="fontSizer" style="display:none">
   <span class="fs-label">A</span>
   <input type="range" class="fs-slider" id="fsSlider" min="90" max="140" step="5" value="105">
   <span class="fs-label fs-label-lg">A</span>
 </div>
+
 <script>
 (function(){
-  var key='qlog-fs',base=105,slider=document.getElementById('fsSlider');
-  var saved=localStorage.getItem(key);
-  var cur=saved?parseInt(saved):base;
-  slider.value=cur;
-  document.documentElement.style.fontSize=cur+'%';
-  slider.addEventListener('input',function(){
-    cur=parseInt(this.value);
-    document.documentElement.style.fontSize=cur+'%';
-    localStorage.setItem(key,cur);
-  });
+  var key = 'qlog-fs';
+  var base = 105;
+  var saved = localStorage.getItem(key);
+  var cur = saved ? parseInt(saved) : base;
+  document.documentElement.style.fontSize = cur + '%';
+
+  function initSlider() {
+    var slider = document.getElementById('fsSlider');
+    var el = document.getElementById('fontSizer');
+    if (!slider || !el) return;
+    slider.value = cur;
+
+    // Inject into sidebar so it never touches the topbar search area
+    var sidebar = document.getElementById('sidebar');
+    if (sidebar) {
+      el.style.display = '';
+      sidebar.appendChild(el);
+    } else {
+      el.style.display = '';
+    }
+
+    slider.addEventListener('input', function(){
+      cur = parseInt(this.value);
+      document.documentElement.style.fontSize = cur + '%';
+      localStorage.setItem(key, cur);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSlider);
+  } else {
+    initSlider();
+  }
 })();
 </script>
