@@ -1,18 +1,19 @@
 <div class="font-sizer" id="fontSizer">
-  <button class="fs-btn" onclick="changeFontSize(-1)" title="缩小字体">A-</button>
-  <button class="fs-btn" onclick="changeFontSize(0)" title="重置字体">A</button>
-  <button class="fs-btn" onclick="changeFontSize(1)" title="放大字体">A+</button>
+  <span class="fs-label">A</span>
+  <input type="range" class="fs-slider" id="fsSlider" min="90" max="140" step="5" value="105">
+  <span class="fs-label fs-label-lg">A</span>
 </div>
 <script>
 (function(){
-  var key='qlog-fs', base=105, step=8, min=90, max=140;
+  var key='qlog-fs',base=105,slider=document.getElementById('fsSlider');
   var saved=localStorage.getItem(key);
   var cur=saved?parseInt(saved):base;
+  slider.value=cur;
   document.documentElement.style.fontSize=cur+'%';
-  window.changeFontSize=function(d){
-    if(d===0){cur=base}else{cur=Math.min(max,Math.max(min,cur+d*step))}
+  slider.addEventListener('input',function(){
+    cur=parseInt(this.value);
     document.documentElement.style.fontSize=cur+'%';
     localStorage.setItem(key,cur);
-  };
+  });
 })();
 </script>

@@ -13,7 +13,6 @@ title: About
     <div class="about-links">
       <a href="https://github.com/cupidryan2-art" target="_blank" class="about-link-btn">GitHub ↗</a>
       <a href="https://x.com/cupidryan2" target="_blank" class="about-link-btn">X ↗</a>
-      <a href="https://instagram.com/cupidryan2" target="_blank" class="about-link-btn">Instagram ↗</a>
     </div>
   </div>
 </div>
