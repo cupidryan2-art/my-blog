@@ -1,0 +1,85 @@
+---
+layout: default
+---
+
+{% include social-links.html %}
+{% include font-sizer.html %}
+
+<div class="qlog-page links-page">
+
+  <!-- Stats -->
+  <div class="links-stats">
+    <div class="links-stat-card">
+      <div class="links-stat-num">{{ site.data.links | size }}</div>
+      <div class="links-stat-label">友链个数</div>
+      <div class="links-stat-sub">每一位朋友都是慢慢认识、认真添加的。</div>
+    </div>
+    <div class="links-stat-card">
+      {% assign rss_count = 0 %}
+      {% for link in site.data.links %}
+        {% if link.rss and link.rss != "" %}
+          {% assign rss_count = rss_count | plus: 1 %}
+        {% endif %}
+      {% endfor %}
+      <div class="links-stat-num">{{ rss_count }}</div>
+      <div class="links-stat-label">提供 RSS 的朋友</div>
+      <div class="links-stat-sub">订阅他们的更新，也别忘了订阅我 :)</div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <div class="links-header">
+    <div class="links-header-left">
+      <h2 class="links-title">这些站点正在分享故事</h2>
+      <p class="links-subtitle">欢迎随意串门，遇到喜欢的内容记得打个招呼。</p>
+    </div>
+    <div class="links-updated">❤ 最近更新：2026-04-14</div>
+  </div>
+
+  <!-- Cards grid -->
+  <div class="links-grid">
+    {% for link in site.data.links %}
+    <div class="link-card">
+      <div class="link-card-top">
+        <div class="link-avatar">
+          {% if link.avatar and link.avatar != "" %}
+            <img src="{{ link.avatar }}" alt="{{ link.name }}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <span class="link-avatar-fallback" style="display:none">{{ link.name | slice: 0 }}</span>
+          {% else %}
+            <span class="link-avatar-fallback">{{ link.name | slice: 0 }}</span>
+          {% endif %}
+        </div>
+        <div class="link-info">
+          <div class="link-name">{{ link.name }}</div>
+          <div class="link-author">{{ link.author }}</div>
+        </div>
+        <span class="link-badge">好友</span>
+      </div>
+      <p class="link-desc">{{ link.desc }}</p>
+      <div class="link-actions">
+        <a href="{{ link.url }}" target="_blank" rel="noopener" class="link-btn link-btn-primary">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          访问网站
+        </a>
+        {% if link.rss and link.rss != "" %}
+        <a href="{{ link.rss }}" target="_blank" rel="noopener" class="link-btn link-btn-rss">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="19" r="2"/><path d="M4 4a16 16 0 0116 16"/><path d="M4 11a9 9 0 019 9"/></svg>
+          RSS
+        </a>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Apply section -->
+  <div class="links-apply">
+    <h3 class="links-apply-title">申请友链</h3>
+    <p class="links-apply-desc">如果你也有自己的博客，欢迎在评论区留下你的站点信息，格式如下：</p>
+    <pre class="links-apply-code">站点名称：
+站点地址：
+站点描述：
+RSS 地址：（可选）</pre>
+  </div>
+
+</div>
