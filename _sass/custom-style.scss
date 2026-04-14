@@ -73,6 +73,65 @@ html[data-mode="dark"] {
   --link-underline-color: transparent;
   --border-color: var(--border);
   --card-bg: #141416;
+
+  /* Explicit overrides so every element actually goes dark */
+  body,
+  #main-wrapper,
+  #core-wrapper,
+  #content,
+  .container,
+  .row,
+  main {
+    background: #0a0a0a !important;
+    color: #f5f5f7 !important;
+  }
+
+  #sidebar {
+    background: #0a0a0a !important;
+    border-right-color: rgba(255,255,255,0.07) !important;
+  }
+
+  .site-title,
+  .site-subtitle,
+  .nav-item .nav-link,
+  .nav-item .nav-link.active {
+    color: #f5f5f7 !important;
+  }
+
+  h1, h2, h3, h4, h5, h6,
+  p, li, span, a, blockquote {
+    color: #f5f5f7 !important;
+  }
+
+  a { color: #2997ff !important; }
+
+  .post-preview,
+  .card,
+  .about-card {
+    background: #141416 !important;
+    border-color: rgba(255,255,255,0.07) !important;
+  }
+
+  .post-preview:hover {
+    background: #1c1c1e !important;
+  }
+
+  hr, .page-divider {
+    border-color: rgba(255,255,255,0.07) !important;
+  }
+
+  code, pre {
+    background: #141416 !important;
+    color: #f5f5f7 !important;
+  }
+
+  #tail-wrapper,
+  footer,
+  #tail-wrapper *,
+  footer * {
+    background: #0a0a0a !important;
+    color: #48484a !important;
+  }
 }
 
 /* ==============================
