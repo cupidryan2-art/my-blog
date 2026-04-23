@@ -1582,17 +1582,13 @@ footer a {
    FOOTPRINT MAP PAGE — 足迹
    ============================== */
 .fp-page {
-  position: relative;
   width: 100%;
-  height: calc(100vh - 60px);
-  overflow: hidden;
+  padding-bottom: 2rem;
 }
 
 /* ── Map View ── */
 .fp-map-view {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+  display: block;
 }
 
 .fp-header {

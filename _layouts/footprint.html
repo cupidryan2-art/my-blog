@@ -8,6 +8,19 @@ layout: default
 <!-- Leaflet CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
+<!-- Force map container to have a real pixel height immediately -->
+<style>
+#fpMap {
+  width: 100%;
+  height: 520px;
+  min-height: 400px;
+  background: var(--bg-alt);
+  border-radius: 10px;
+  display: block;
+}
+@media (max-height: 700px) { #fpMap { height: 380px; } }
+</style>
+
 <div class="fp-page">
 
   <!-- Map view -->
@@ -20,14 +33,13 @@ layout: default
       <div class="fp-legend">
         <span class="fp-legend-item"><i class="fp-dot fp-dot-lived"></i>长居</span>
         <span class="fp-legend-item"><i class="fp-dot fp-dot-visited"></i>到访</span>
-        <span class="fp-legend-item"><i class="fp-dot fp-dot-special"></i>特别</span>
       </div>
     </div>
     <div id="fpMap"></div>
   </div>
 
   <!-- Detail view (hidden by default) -->
-  <div class="fp-detail-view" id="fpDetailView">
+  <div class="fp-detail-view" id="fpDetailView" style="display:none">
     <button class="fp-back-btn" id="fpBackBtn">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><path d="M12 5l-7 7 7 7"/></svg>
       返回地图
@@ -42,16 +54,17 @@ layout: default
 
 <script>
 (function () {
-  const FOOTPRINTS = {{ site.data.footprint | jsonify }};
+  var FOOTPRINTS = {{ site.data.footprint | jsonify }};
 
-  // Color tokens — match blog palette
-  const TYPE_COLOR = {
+  var TYPE_COLOR = {
     lived:   { fill: '#FF9F0A', border: '#cc7e00' },
     visited: { fill: '#30C2C2', border: '#1d9494' },
     special: { fill: '#FF375F', border: '#cc1a40' },
   };
 
-  const isDark = () => document.documentElement.getAttribute('data-mode') === 'dark';
+  function isDark() {
+    return document.documentElement.getAttribute('data-mode') === 'dark';
+  }
 
   function getTileUrl() {
     return isDark()
@@ -59,92 +72,98 @@ layout: default
       : 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png';
   }
 
-  let map, tileLayer;
+  var map, tileLayer;
 
   function initMap() {
+    var container = document.getElementById('fpMap');
+    if (!container || container.offsetHeight === 0) {
+      // Container not ready yet, retry
+      setTimeout(initMap, 150);
+      return;
+    }
+
     map = L.map('fpMap', {
-      center: [20, 105],
+      center: [25, 108],
       zoom: 4,
       zoomControl: false,
       attributionControl: false,
     });
 
-    tileLayer = L.tileLayer(getTileUrl(), { maxZoom: 10 }).addTo(map);
+    tileLayer = L.tileLayer(getTileUrl(), {
+      maxZoom: 12,
+      subdomains: 'abcd',
+    }).addTo(map);
 
     L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-    FOOTPRINTS.forEach(fp => {
-      const c = TYPE_COLOR[fp.type] || TYPE_COLOR.visited;
-      const marker = L.circleMarker([fp.lat, fp.lng], {
-        radius: 9,
+    FOOTPRINTS.forEach(function(fp) {
+      var c = TYPE_COLOR[fp.type] || TYPE_COLOR.visited;
+      var marker = L.circleMarker([fp.lat, fp.lng], {
+        radius: fp.type === 'lived' ? 11 : 8,
         fillColor: c.fill,
         color: c.border,
         weight: 2,
-        fillOpacity: 0.9,
-        className: 'fp-marker fp-pulse-' + fp.type,
+        fillOpacity: 0.92,
       }).addTo(map);
 
       marker.bindTooltip(
-        `<strong>${fp.name}</strong><br><span style="font-size:0.75em;opacity:0.7">${fp.date}</span>`,
+        '<strong>' + fp.name + '</strong><br><span style="font-size:0.75em;opacity:0.7">' + fp.date + '</span>',
         { direction: 'top', offset: [0, -10], className: 'fp-tooltip' }
       );
 
-      marker.on('click', () => showDetail(fp));
+      marker.on('click', function() { showDetail(fp); });
     });
 
-    // Sync tile when mode changes
-    const obs = new MutationObserver(() => {
+    // Re-render tiles when dark/light mode changes
+    new MutationObserver(function() {
       tileLayer.setUrl(getTileUrl());
-    });
-    obs.observe(document.documentElement, { attributes: true, attributeFilter: ['data-mode'] });
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-mode'] });
+
+    // Force redraw to ensure tiles load
+    setTimeout(function() { map.invalidateSize(); }, 300);
   }
 
   function showDetail(fp) {
     document.getElementById('fpMapView').style.display = 'none';
-    const view = document.getElementById('fpDetailView');
+    var view = document.getElementById('fpDetailView');
     view.style.display = 'block';
 
-    const c = TYPE_COLOR[fp.type] || TYPE_COLOR.visited;
-    const typeLabel = { lived: '长居', visited: '到访', special: '特别记忆' }[fp.type] || fp.type;
+    var c = TYPE_COLOR[fp.type] || TYPE_COLOR.visited;
+    var typeLabel = { lived: '长居', visited: '到访', special: '特别记忆' }[fp.type] || fp.type;
 
-    let contentHtml = '';
-    (fp.content || []).forEach(block => {
+    var contentHtml = '';
+    (fp.content || []).forEach(function(block) {
       if (block.type === 'text') {
-        contentHtml += `<p class="fp-body-text">${block.value}</p>`;
+        contentHtml += '<p class="fp-body-text">' + block.value + '</p>';
       } else if (block.type === 'image') {
-        contentHtml += `<figure class="fp-body-img">
-          <img src="${block.src}" alt="${block.caption || ''}" loading="lazy">
-          ${block.caption ? `<figcaption>${block.caption}</figcaption>` : ''}
-        </figure>`;
+        contentHtml += '<figure class="fp-body-img">'
+          + '<img src="' + block.src + '" alt="' + (block.caption || '') + '" loading="lazy">'
+          + (block.caption ? '<figcaption>' + block.caption + '</figcaption>' : '')
+          + '</figure>';
       }
     });
 
-    document.getElementById('fpDetailContent').innerHTML = `
-      <div class="fp-detail-meta">
-        <h2 class="fp-detail-name">${fp.name}</h2>
-        <div class="fp-detail-info">
-          <span class="fp-detail-date">${fp.date}</span>
-          <span class="fp-detail-tag" style="background:${c.fill}20;color:${c.fill};border:1px solid ${c.fill}40">${typeLabel}</span>
-        </div>
-        <p class="fp-detail-desc">${fp.description || ''}</p>
-      </div>
-      <div class="fp-detail-body">${contentHtml}</div>
-    `;
+    document.getElementById('fpDetailContent').innerHTML =
+      '<div class="fp-detail-meta">'
+      + '<h2 class="fp-detail-name">' + fp.name + '</h2>'
+      + '<div class="fp-detail-info">'
+      + '<span class="fp-detail-date">' + fp.date + '</span>'
+      + '<span class="fp-detail-tag" style="background:' + c.fill + '20;color:' + c.fill + ';border:1px solid ' + c.fill + '40">' + typeLabel + '</span>'
+      + '</div>'
+      + '<p class="fp-detail-desc">' + (fp.description || '') + '</p>'
+      + '</div>'
+      + '<div class="fp-detail-body">' + contentHtml + '</div>';
 
     view.scrollTop = 0;
   }
 
-  document.getElementById('fpBackBtn').addEventListener('click', () => {
+  document.getElementById('fpBackBtn').addEventListener('click', function() {
     document.getElementById('fpDetailView').style.display = 'none';
-    document.getElementById('fpMapView').style.display = 'flex';
-    setTimeout(() => map && map.invalidateSize(), 100);
+    document.getElementById('fpMapView').style.display = 'block';
+    setTimeout(function() { if (map) map.invalidateSize(); }, 150);
   });
 
-  // Init after DOM ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initMap);
-  } else {
-    initMap();
-  }
+  // Start after a brief delay to ensure Leaflet JS has loaded and container is painted
+  setTimeout(initMap, 200);
 })();
 </script>
