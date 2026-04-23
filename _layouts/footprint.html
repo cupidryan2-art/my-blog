@@ -23,54 +23,67 @@ layout: default
   font-size: 0.72rem; color: var(--text-3);
   font-family: var(--ff-sans);
 }
-.fp-dot {
-  display: inline-block; width: 9px; height: 9px; border-radius: 50%;
-}
+.fp-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; }
 .fp-dot-lived   { background: #FF9F0A; }
 .fp-dot-visited { background: #30C2C2; }
 
-/* Map container */
+/* Map container — ocean color */
 .fp-map-wrap {
   position: relative; width: 100%;
-  border-radius: 10px; overflow: hidden;
+  border-radius: 12px; overflow: hidden;
   border: 1px solid var(--border);
-  background: var(--bg-alt);
+  background: #dce8f0;
   cursor: grab;
   user-select: none;
   line-height: 0;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.06);
 }
 .fp-map-wrap:active { cursor: grabbing; }
+html[data-mode="dark"] .fp-map-wrap { background: #0e1a2b; }
 
-/* Inline SVG map */
+/* Inline SVG */
 #fpSvgMap {
   width: 100%; height: 440px; display: block;
-  color: var(--border);
-  transition: color 0.3s;
-  cursor: grab;
 }
-html[data-mode="dark"] #fpSvgMap { color: rgba(255,255,255,0.12); }
+
+/* Dark mode country color */
+html[data-mode="dark"] .fp-map-wrap svg g {
+  fill: #2a3a52 !important;
+  stroke: rgba(255,255,255,0.06) !important;
+}
 
 /* Markers */
-.fp-pin {
-  cursor: pointer;
-  transition: r 0.15s;
+.fp-pin { cursor: pointer; }
+.fp-pin:hover { opacity: 0.8; }
+
+/* Lived pulse ring */
+@keyframes fp-pulse {
+  0%   { r: 10; opacity: 0.6; }
+  100% { r: 18; opacity: 0; }
+}
+.fp-pin-pulse {
+  fill: #FF9F0A; stroke: none; pointer-events: none;
+  animation: fp-pulse 2s ease-out infinite;
 }
 
-/* Tooltip label */
+/* Tooltip */
 .fp-pin-label {
-  position: absolute; background: var(--card-bg);
-  border: 1px solid var(--border); border-radius: 6px;
-  padding: 4px 9px; font-size: 0.75rem; color: var(--text-1);
+  position: absolute; background: #fff;
+  border: 1px solid rgba(0,0,0,0.08); border-radius: 8px;
+  padding: 5px 11px; font-size: 0.75rem; color: #111;
   white-space: nowrap; pointer-events: none;
-  transform: translate(-50%, -130%);
+  transform: translate(-50%, -135%);
   display: none; z-index: 10;
   font-family: var(--ff-sans);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  line-height: 1.4;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+  line-height: 1.5;
+}
+html[data-mode="dark"] .fp-pin-label {
+  background: #1e2a3a; border-color: rgba(255,255,255,0.1); color: #f0f0f0;
 }
 .fp-pin-label.visible { display: block; }
-.fp-pin-label strong { display: block; }
-.fp-pin-label small { color: var(--text-3); }
+.fp-pin-label strong { display: block; font-size: 0.8rem; }
+.fp-pin-label small { color: #888; font-size: 0.7rem; }
 
 /* Detail view */
 .fp-detail { display: none; padding-top: 1.5rem; }
@@ -147,8 +160,8 @@ html[data-mode="dark"] #fpSvgMap { color: rgba(255,255,255,0.12); }
   var DATA = {{ site.data.footprint | jsonify }};
   var W = 960, H = 500;
   var COLORS = {
-    lived:   { fill: '#FF9F0A', stroke: '#cc7e00' },
-    visited: { fill: '#30C2C2', stroke: '#1d9494' },
+    lived:   { fill: '#FF9F0A', stroke: '#e08800' },
+    visited: { fill: '#30C2C2', stroke: '#1a9898' },
     special: { fill: '#FF375F', stroke: '#cc1a40' }
   };
 
@@ -161,34 +174,42 @@ html[data-mode="dark"] #fpSvgMap { color: rgba(255,255,255,0.12); }
     return [x, y];
   }
 
-  // SVG is already inlined — grab it directly
   var wrap = document.getElementById('fpMapWrap');
   var label = document.getElementById('fpLabel');
   var svg = wrap.querySelector('svg');
-
   if (!svg) { return; }
 
-  // Set up SVG
   svg.id = 'fpSvgMap';
   svg.setAttribute('preserveAspectRatio', 'none');
   svg.setAttribute('width', '100%');
   svg.setAttribute('height', '440');
 
-  // Add markers
   var ns = 'http://www.w3.org/2000/svg';
+
   DATA.forEach(function(fp) {
     var c = COLORS[fp.type] || COLORS.visited;
     var xy = latLngToXY(fp.lat, fp.lng);
+
+    // Pulse ring for "lived" places
+    if (fp.type === 'lived') {
+      var pulse = document.createElementNS(ns, 'circle');
+      pulse.setAttribute('cx', xy[0].toFixed(1));
+      pulse.setAttribute('cy', xy[1].toFixed(1));
+      pulse.setAttribute('r', '10');
+      pulse.setAttribute('class', 'fp-pin-pulse');
+      svg.appendChild(pulse);
+    }
+
+    // Main marker
     var circle = document.createElementNS(ns, 'circle');
     circle.setAttribute('cx', xy[0].toFixed(1));
     circle.setAttribute('cy', xy[1].toFixed(1));
-    circle.setAttribute('r', fp.type === 'lived' ? '7' : '5');
+    circle.setAttribute('r', fp.type === 'lived' ? '8' : '6');
     circle.setAttribute('fill', c.fill);
-    circle.setAttribute('stroke', c.stroke);
-    circle.setAttribute('stroke-width', '1.5');
+    circle.setAttribute('stroke', '#fff');
+    circle.setAttribute('stroke-width', '2');
     circle.setAttribute('class', 'fp-pin');
 
-    // Hover label
     circle.addEventListener('mouseenter', function() {
       var rect = wrap.getBoundingClientRect();
       var svgRect = svg.getBoundingClientRect();
