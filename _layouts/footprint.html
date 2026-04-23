@@ -1,0 +1,150 @@
+---
+layout: default
+---
+
+{% include social-links.html %}
+{% include font-sizer.html %}
+
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+<div class="fp-page">
+
+  <!-- Map view -->
+  <div class="fp-map-view" id="fpMapView">
+    <div class="fp-header">
+      <div>
+        <h1 class="fp-title">足迹</h1>
+        <p class="fp-subtitle">走过的地方</p>
+      </div>
+      <div class="fp-legend">
+        <span class="fp-legend-item"><i class="fp-dot fp-dot-lived"></i>长居</span>
+        <span class="fp-legend-item"><i class="fp-dot fp-dot-visited"></i>到访</span>
+        <span class="fp-legend-item"><i class="fp-dot fp-dot-special"></i>特别</span>
+      </div>
+    </div>
+    <div id="fpMap"></div>
+  </div>
+
+  <!-- Detail view (hidden by default) -->
+  <div class="fp-detail-view" id="fpDetailView">
+    <button class="fp-back-btn" id="fpBackBtn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><path d="M12 5l-7 7 7 7"/></svg>
+      返回地图
+    </button>
+    <div class="fp-detail-content" id="fpDetailContent"></div>
+  </div>
+
+</div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+(function () {
+  const FOOTPRINTS = {{ site.data.footprint | jsonify }};
+
+  // Color tokens — match blog palette
+  const TYPE_COLOR = {
+    lived:   { fill: '#FF9F0A', border: '#cc7e00' },
+    visited: { fill: '#30C2C2', border: '#1d9494' },
+    special: { fill: '#FF375F', border: '#cc1a40' },
+  };
+
+  const isDark = () => document.documentElement.getAttribute('data-mode') === 'dark';
+
+  function getTileUrl() {
+    return isDark()
+      ? 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png'
+      : 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png';
+  }
+
+  let map, tileLayer;
+
+  function initMap() {
+    map = L.map('fpMap', {
+      center: [20, 105],
+      zoom: 4,
+      zoomControl: false,
+      attributionControl: false,
+    });
+
+    tileLayer = L.tileLayer(getTileUrl(), { maxZoom: 10 }).addTo(map);
+
+    L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+    FOOTPRINTS.forEach(fp => {
+      const c = TYPE_COLOR[fp.type] || TYPE_COLOR.visited;
+      const marker = L.circleMarker([fp.lat, fp.lng], {
+        radius: 9,
+        fillColor: c.fill,
+        color: c.border,
+        weight: 2,
+        fillOpacity: 0.9,
+        className: 'fp-marker fp-pulse-' + fp.type,
+      }).addTo(map);
+
+      marker.bindTooltip(
+        `<strong>${fp.name}</strong><br><span style="font-size:0.75em;opacity:0.7">${fp.date}</span>`,
+        { direction: 'top', offset: [0, -10], className: 'fp-tooltip' }
+      );
+
+      marker.on('click', () => showDetail(fp));
+    });
+
+    // Sync tile when mode changes
+    const obs = new MutationObserver(() => {
+      tileLayer.setUrl(getTileUrl());
+    });
+    obs.observe(document.documentElement, { attributes: true, attributeFilter: ['data-mode'] });
+  }
+
+  function showDetail(fp) {
+    document.getElementById('fpMapView').style.display = 'none';
+    const view = document.getElementById('fpDetailView');
+    view.style.display = 'block';
+
+    const c = TYPE_COLOR[fp.type] || TYPE_COLOR.visited;
+    const typeLabel = { lived: '长居', visited: '到访', special: '特别记忆' }[fp.type] || fp.type;
+
+    let contentHtml = '';
+    (fp.content || []).forEach(block => {
+      if (block.type === 'text') {
+        contentHtml += `<p class="fp-body-text">${block.value}</p>`;
+      } else if (block.type === 'image') {
+        contentHtml += `<figure class="fp-body-img">
+          <img src="${block.src}" alt="${block.caption || ''}" loading="lazy">
+          ${block.caption ? `<figcaption>${block.caption}</figcaption>` : ''}
+        </figure>`;
+      }
+    });
+
+    document.getElementById('fpDetailContent').innerHTML = `
+      <div class="fp-detail-meta">
+        <h2 class="fp-detail-name">${fp.name}</h2>
+        <div class="fp-detail-info">
+          <span class="fp-detail-date">${fp.date}</span>
+          <span class="fp-detail-tag" style="background:${c.fill}20;color:${c.fill};border:1px solid ${c.fill}40">${typeLabel}</span>
+        </div>
+        <p class="fp-detail-desc">${fp.description || ''}</p>
+      </div>
+      <div class="fp-detail-body">${contentHtml}</div>
+    `;
+
+    view.scrollTop = 0;
+  }
+
+  document.getElementById('fpBackBtn').addEventListener('click', () => {
+    document.getElementById('fpDetailView').style.display = 'none';
+    document.getElementById('fpMapView').style.display = 'flex';
+    setTimeout(() => map && map.invalidateSize(), 100);
+  });
+
+  // Init after DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMap);
+  } else {
+    initMap();
+  }
+})();
+</script>

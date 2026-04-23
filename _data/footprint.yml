@@ -1,0 +1,57 @@
+- id: hangzhou
+  name: 杭州
+  date: "2000-09"
+  lat: 30.2741
+  lng: 120.1551
+  type: lived
+  description: 我的家乡，生长了十八年的地方。西湖边的风，建国北路的咖啡店，凤起路——都是不会忘记的地名。
+  content:
+    - type: text
+      value: 四月的杭州，天气乍暖还寒，行道树将阴凉的树影洒落在沿河的路上。能迎着春风伴着月色在操场一圈一圈走着的日子令人留念，正是因为我们知道明天有无数的不期而遇的美好。
+
+- id: kuala-lumpur
+  name: 吉隆坡 / XMUM
+  date: "2024-09"
+  lat: 2.9213
+  lng: 101.7768
+  type: lived
+  description: 就读厦门大学马来西亚分校。从南国的湿热开始，重新认识另一个世界。
+  content:
+    - type: text
+      value: 夜半秋凉，骑在回家的路上。空中飘着细细的雨丝，是那种在黑夜中看不见、却会使你浑身湿透的那种雨。
+
+- id: angkor-wat
+  name: 吴哥窟
+  date: "2025-12"
+  lat: 13.4125
+  lng: 103.8670
+  type: special
+  description: 变身塔上的落日。来自世界各国的游客都静静地坐着，在此迎接这盛大的落日。
+  content:
+    - type: text
+      value: 我的左侧是黑蓝色的天，右手是橙红色的夕阳与落日。众人默契的无言让我有些感动，风声吹过寺塔千年岩石的声音清晰入耳。大家就那样和谐地坐着，无声而宏大。
+    - type: image
+      src: /assets/img/posts/2025-12-14-angkor-wat.jpeg
+      caption: 吴哥窟变身塔，2025年12月
+
+- id: bali
+  name: 巴厘岛
+  date: "2024-06"
+  lat: -8.3405
+  lng: 115.0920
+  type: special
+  description: 神明之岛。稻田、寺庙与海浪。
+  content:
+    - type: text
+      value: 在这里，时间的流速好像变得不一样了。
+
+- id: tokyo
+  name: 东京
+  date: "2023-07"
+  lat: 35.6762
+  lng: 139.6503
+  type: visited
+  description: 夏天的东京，令人萌生想诅咒一切的念头的日子，一个夏季里总有那么几天。
+  content:
+    - type: text
+      value: 富裕的人都忙不迭地赶到某处避暑去了，城里因此变得空空荡荡，十分惬意。

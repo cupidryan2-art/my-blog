@@ -1577,3 +1577,217 @@ footer a {
   .links-grid { grid-template-columns: 1fr; }
   .links-header { flex-direction: column; align-items: flex-start; }
 }
+
+/* ==============================
+   FOOTPRINT MAP PAGE — 足迹
+   ============================== */
+.fp-page {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 60px);
+  overflow: hidden;
+}
+
+/* ── Map View ── */
+.fp-map-view {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.fp-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 2rem 1rem;
+  flex-shrink: 0;
+}
+
+.fp-title {
+  font-family: var(--ff-serif) !important;
+  font-size: 1.6rem !important;
+  font-weight: 700 !important;
+  color: var(--text-1) !important;
+  margin: 0 0 0.1rem !important;
+  letter-spacing: -0.02em;
+}
+
+.fp-subtitle {
+  font-size: 0.75rem;
+  color: var(--text-3);
+  margin: 0 !important;
+  letter-spacing: 0.05em;
+}
+
+.fp-legend {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.fp-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  color: var(--text-3);
+  font-family: var(--ff-sans);
+}
+
+.fp-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  &.fp-dot-lived   { background: #FF9F0A; }
+  &.fp-dot-visited { background: #30C2C2; }
+  &.fp-dot-special { background: #FF375F; }
+}
+
+#fpMap {
+  flex: 1;
+  width: 100%;
+  background: var(--bg-alt);
+  border-radius: var(--r-md) var(--r-md) 0 0;
+  overflow: hidden;
+
+  // Override Leaflet defaults to match blog style
+  .leaflet-container {
+    background: var(--bg-alt);
+    font-family: var(--ff-sans);
+  }
+
+  .leaflet-control-zoom a {
+    background: var(--card-bg) !important;
+    color: var(--text-2) !important;
+    border-color: var(--border) !important;
+    font-family: var(--ff-sans);
+    &:hover { color: var(--text-1) !important; }
+  }
+}
+
+/* Marker pulse animation */
+.fp-marker {
+  cursor: pointer;
+  transition: r 0.2s;
+}
+
+/* Tooltip */
+.fp-tooltip {
+  background: var(--card-bg) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--r-sm) !important;
+  box-shadow: var(--shadow) !important;
+  color: var(--text-1) !important;
+  padding: 6px 10px !important;
+  font-family: var(--ff-sans) !important;
+  font-size: 0.8rem !important;
+  white-space: nowrap;
+
+  &.leaflet-tooltip::before { display: none; }
+}
+
+/* ── Detail View ── */
+.fp-detail-view {
+  display: none;
+  height: 100%;
+  overflow-y: auto;
+  padding: 1.5rem 2rem 3rem;
+  animation: fadeUp 0.3s var(--ease);
+}
+
+.fp-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  font-family: var(--ff-sans);
+  color: var(--text-2);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  margin-bottom: 2rem;
+  transition: color 0.2s;
+  &:hover { color: var(--text-1); }
+}
+
+.fp-detail-meta {
+  max-width: 600px;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.fp-detail-name {
+  font-family: var(--ff-serif) !important;
+  font-size: 2.2rem !important;
+  font-weight: 700 !important;
+  color: var(--text-1) !important;
+  margin: 0 0 0.6rem !important;
+  letter-spacing: -0.02em;
+}
+
+.fp-detail-info {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.fp-detail-date {
+  font-size: 0.8rem;
+  color: var(--text-3);
+  font-family: var(--ff-sans);
+}
+
+.fp-detail-tag {
+  font-size: 0.7rem;
+  font-family: var(--ff-sans);
+  padding: 2px 10px;
+  border-radius: var(--r-pill);
+  font-weight: 500;
+}
+
+.fp-detail-desc {
+  font-size: 0.9rem;
+  color: var(--text-2);
+  line-height: 1.7;
+  margin: 0 !important;
+}
+
+.fp-detail-body {
+  max-width: 600px;
+}
+
+.fp-body-text {
+  font-size: 1rem;
+  color: var(--text-1);
+  line-height: 1.85;
+  margin-bottom: 1.4rem !important;
+  font-family: var(--ff-body);
+}
+
+.fp-body-img {
+  margin: 1.5rem 0 !important;
+  img {
+    width: 100%;
+    max-height: 380px;
+    object-fit: cover;
+    border-radius: var(--r-md);
+    display: block;
+  }
+  figcaption {
+    font-size: 0.75rem;
+    color: var(--text-3);
+    text-align: center;
+    margin-top: 0.5rem;
+    font-style: italic;
+  }
+}
+
+@media (max-width: 768px) {
+  .fp-header { padding: 1rem; flex-direction: column; align-items: flex-start; gap: 0.8rem; }
+  .fp-detail-view { padding: 1rem 1rem 3rem; }
+  .fp-detail-name { font-size: 1.8rem !important; }
+}
