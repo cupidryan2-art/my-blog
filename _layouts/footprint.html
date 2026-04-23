@@ -5,21 +5,113 @@ layout: default
 {% include social-links.html %}
 {% include font-sizer.html %}
 
-<link rel="stylesheet" href="{{ '/assets/lib/leaflet.css' | relative_url }}" />
-
 <style>
-#fpMap {
-  width: 100%;
-  height: 520px;
+.fp-page { width: 100%; padding-bottom: 3rem; }
+
+.fp-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 2rem 0 1.2rem;
+}
+.fp-title {
+  font-family: var(--ff-serif); font-size: 1.6rem; font-weight: 700;
+  color: var(--text-1); margin: 0 0 0.15rem; letter-spacing: -0.02em;
+}
+.fp-subtitle { font-size: 0.75rem; color: var(--text-3); margin: 0; }
+.fp-legend { display: flex; align-items: center; gap: 1rem; }
+.fp-legend-item {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 0.72rem; color: var(--text-3);
+  font-family: var(--ff-sans);
+}
+.fp-dot {
+  display: inline-block; width: 9px; height: 9px; border-radius: 50%;
+}
+.fp-dot-lived   { background: #FF9F0A; }
+.fp-dot-visited { background: #30C2C2; }
+
+/* Map container */
+.fp-map-wrap {
+  position: relative; width: 100%;
+  border-radius: 10px; overflow: hidden;
+  border: 1px solid var(--border);
   background: var(--bg-alt);
-  border-radius: 10px;
-  z-index: 1;
+  cursor: grab;
+  user-select: none;
+}
+.fp-map-wrap:active { cursor: grabbing; }
+
+/* SVG map */
+#fpSvgMap {
+  width: 100%; height: 440px; display: block;
+  color: var(--border);
+  transition: color 0.3s;
+}
+html[data-mode="dark"] #fpSvgMap { color: rgba(255,255,255,0.12); }
+
+/* Markers */
+.fp-pin {
+  cursor: pointer;
+  transition: r 0.15s;
+}
+.fp-pin:hover { r: 10; }
+.fp-pin-label {
+  position: absolute; background: var(--card-bg);
+  border: 1px solid var(--border); border-radius: 6px;
+  padding: 4px 9px; font-size: 0.75rem; color: var(--text-1);
+  white-space: nowrap; pointer-events: none;
+  transform: translate(-50%, -130%);
+  display: none; z-index: 10;
+  font-family: var(--ff-sans);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.fp-pin-label.visible { display: block; }
+.fp-pin-label strong { display: block; }
+.fp-pin-label small { color: var(--text-3); }
+
+/* Detail view */
+.fp-detail { display: none; padding-top: 1.5rem; }
+.fp-back-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.82rem; font-family: var(--ff-sans);
+  color: var(--text-2); background: none; border: none;
+  padding: 0; cursor: pointer; margin-bottom: 2rem;
+  transition: color 0.2s;
+}
+.fp-back-btn:hover { color: var(--text-1); }
+.fp-detail-name {
+  font-family: var(--ff-serif) !important; font-size: 2rem !important;
+  font-weight: 700 !important; color: var(--text-1) !important;
+  margin: 0 0 0.6rem !important; letter-spacing: -0.02em;
+}
+.fp-detail-info { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1rem; }
+.fp-detail-date { font-size: 0.8rem; color: var(--text-3); font-family: var(--ff-sans); }
+.fp-detail-tag {
+  font-size: 0.7rem; font-family: var(--ff-sans);
+  padding: 2px 10px; border-radius: 999px; font-weight: 500;
+}
+.fp-detail-desc {
+  font-size: 0.9rem; color: var(--text-2); line-height: 1.7;
+  max-width: 600px; margin-bottom: 1.5rem !important;
+  border-bottom: 1px solid var(--border); padding-bottom: 1.5rem;
+}
+.fp-body-text {
+  font-size: 1rem; color: var(--text-1); line-height: 1.85;
+  margin-bottom: 1.4rem !important; max-width: 600px;
+}
+.fp-body-img { margin: 1.5rem 0 !important; max-width: 600px; }
+.fp-body-img img {
+  width: 100%; max-height: 360px; object-fit: cover;
+  border-radius: 10px; display: block;
+}
+.fp-body-img figcaption {
+  font-size: 0.75rem; color: var(--text-3);
+  text-align: center; margin-top: 0.5rem; font-style: italic;
 }
 </style>
 
 <div class="fp-page">
-
-  <div class="fp-map-view" id="fpMapView">
+  <!-- Map view -->
+  <div id="fpMapView">
     <div class="fp-header">
       <div>
         <h1 class="fp-title">足迹</h1>
@@ -30,134 +122,123 @@ layout: default
         <span class="fp-legend-item"><i class="fp-dot fp-dot-visited"></i>到访</span>
       </div>
     </div>
-    <div id="fpMap"></div>
+    <div class="fp-map-wrap" id="fpMapWrap">
+      <!-- SVG map loaded here by JS -->
+      <div id="fpLabel" class="fp-pin-label"></div>
+    </div>
   </div>
 
-  <div class="fp-detail-view" id="fpDetailView" style="display:none">
-    <button class="fp-back-btn" id="fpBackBtn">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><path d="M12 5l-7 7 7 7"/></svg>
+  <!-- Detail view -->
+  <div class="fp-detail" id="fpDetail">
+    <button class="fp-back-btn" id="fpBack">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><path d="M12 5l-7 7 7 7"/></svg>
       返回地图
     </button>
-    <div id="fpDetailContent"></div>
+    <div id="fpDetailInner"></div>
   </div>
-
 </div>
 
-<script src="{{ '/assets/lib/leaflet.js' | relative_url }}"></script>
 <script>
-(function () {
-  var FOOTPRINTS = {{ site.data.footprint | jsonify }};
-
-  var TYPE_COLOR = {
-    lived:   { fill: '#FF9F0A', border: '#cc7e00' },
-    visited: { fill: '#30C2C2', border: '#1d9494' },
-    special: { fill: '#FF375F', border: '#cc1a40' }
+(function() {
+  var DATA = {{ site.data.footprint | jsonify }};
+  var W = 960, H = 500;
+  var COLORS = {
+    lived:   { fill: '#FF9F0A', stroke: '#cc7e00' },
+    visited: { fill: '#30C2C2', stroke: '#1d9494' },
+    special: { fill: '#FF375F', stroke: '#cc1a40' }
   };
 
-  function isDark() {
-    return document.documentElement.getAttribute('data-mode') === 'dark';
+  function latLngToXY(lat, lng) {
+    var x = (lng + 180) / 360 * W;
+    var latR = Math.max(-85, Math.min(85, lat)) * Math.PI / 180;
+    var mercN = Math.log(Math.tan(Math.PI/4 + latR/2));
+    var maxMerc = Math.log(Math.tan(Math.PI/4 + 85*Math.PI/360));
+    var y = (1 - (mercN + maxMerc) / (2 * maxMerc)) * H;
+    return [x, y];
   }
 
-  function getTileUrl() {
-    return isDark()
-      ? 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png'
-      : 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png';
-  }
+  // Load SVG map then add markers
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', '{{ "/assets/img/world-map.svg" | relative_url }}');
+  xhr.onload = function() {
+    if (xhr.status !== 200) return;
+    var wrap = document.getElementById('fpMapWrap');
+    var label = document.getElementById('fpLabel');
 
-  var map, tileLayer;
+    // Insert SVG
+    var tmp = document.createElement('div');
+    tmp.innerHTML = xhr.responseText;
+    var svg = tmp.querySelector('svg');
+    svg.id = 'fpSvgMap';
+    svg.setAttribute('preserveAspectRatio', 'none');
+    wrap.insertBefore(svg, label);
 
-  function initMap() {
-    if (typeof L === 'undefined') {
-      console.error('Leaflet not loaded');
-      return;
-    }
+    // Add markers
+    var ns = 'http://www.w3.org/2000/svg';
+    DATA.forEach(function(fp) {
+      var c = COLORS[fp.type] || COLORS.visited;
+      var xy = latLngToXY(fp.lat, fp.lng);
+      var circle = document.createElementNS(ns, 'circle');
+      circle.setAttribute('cx', xy[0].toFixed(1));
+      circle.setAttribute('cy', xy[1].toFixed(1));
+      circle.setAttribute('r', fp.type === 'lived' ? '7' : '5');
+      circle.setAttribute('fill', c.fill);
+      circle.setAttribute('stroke', c.stroke);
+      circle.setAttribute('stroke-width', '1.5');
+      circle.setAttribute('class', 'fp-pin');
+      circle.style.cursor = 'pointer';
 
-    var container = document.getElementById('fpMap');
-    if (!container) return;
+      // Hover label
+      circle.addEventListener('mouseenter', function(e) {
+        var rect = wrap.getBoundingClientRect();
+        var svgRect = svg.getBoundingClientRect();
+        var scaleX = svgRect.width / W;
+        var scaleY = svgRect.height / H;
+        var px = (xy[0] * scaleX) + (svgRect.left - rect.left);
+        var py = (xy[1] * scaleY) + (svgRect.top - rect.top);
+        label.innerHTML = '<strong>' + fp.name + '</strong><small>' + fp.date + '</small>';
+        label.style.left = px + 'px';
+        label.style.top = py + 'px';
+        label.classList.add('visible');
+      });
+      circle.addEventListener('mouseleave', function() {
+        label.classList.remove('visible');
+      });
+      circle.addEventListener('click', function() {
+        label.classList.remove('visible');
+        showDetail(fp);
+      });
 
-    map = L.map('fpMap', {
-      center: [28, 108],
-      zoom: 4,
-      zoomControl: true,
-      attributionControl: false
+      svg.appendChild(circle);
     });
-
-    tileLayer = L.tileLayer(getTileUrl(), {
-      maxZoom: 12,
-      subdomains: 'abcd'
-    }).addTo(map);
-
-    FOOTPRINTS.forEach(function(fp) {
-      if (!fp.lat || !fp.lng) return;
-      var c = TYPE_COLOR[fp.type] || TYPE_COLOR.visited;
-      var marker = L.circleMarker([fp.lat, fp.lng], {
-        radius: fp.type === 'lived' ? 11 : 8,
-        fillColor: c.fill,
-        color: c.border,
-        weight: 2,
-        fillOpacity: 0.92
-      }).addTo(map);
-
-      marker.bindTooltip(
-        '<strong>' + fp.name + '</strong><br><small>' + fp.date + '</small>',
-        { direction: 'top', offset: [0, -10], className: 'fp-tooltip' }
-      );
-
-      marker.on('click', function() { showDetail(fp); });
-    });
-
-    new MutationObserver(function() {
-      if (tileLayer) tileLayer.setUrl(getTileUrl());
-    }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-mode'] });
-
-    map.invalidateSize();
-  }
+  };
+  xhr.send();
 
   function showDetail(fp) {
     document.getElementById('fpMapView').style.display = 'none';
-    var view = document.getElementById('fpDetailView');
-    view.style.display = 'block';
-
-    var c = TYPE_COLOR[fp.type] || TYPE_COLOR.visited;
-    var typeLabel = { lived: '长居', visited: '到访', special: '特别记忆' }[fp.type] || fp.type;
-
-    var bodyHtml = '';
-    (fp.content || []).forEach(function(block) {
-      if (block.type === 'text') {
-        bodyHtml += '<p class="fp-body-text">' + block.value + '</p>';
-      } else if (block.type === 'image') {
-        bodyHtml += '<figure class="fp-body-img">'
-          + '<img src="' + block.src + '" alt="' + (block.caption || '') + '" loading="lazy">'
-          + (block.caption ? '<figcaption>' + block.caption + '</figcaption>' : '')
-          + '</figure>';
-      }
+    var det = document.getElementById('fpDetail');
+    det.style.display = 'block';
+    var c = COLORS[fp.type] || COLORS.visited;
+    var typeLabel = {lived:'长居', visited:'到访', special:'特别记忆'}[fp.type] || fp.type;
+    var body = '';
+    (fp.content||[]).forEach(function(b) {
+      if (b.type==='text') body += '<p class="fp-body-text">' + b.value + '</p>';
+      else if (b.type==='image') body += '<figure class="fp-body-img"><img src="'+b.src+'" alt="'+(b.caption||'')+'" loading="lazy">'+(b.caption?'<figcaption>'+b.caption+'</figcaption>':'')+'</figure>';
     });
-
-    document.getElementById('fpDetailContent').innerHTML =
-      '<div class="fp-detail-meta">'
-        + '<h2 class="fp-detail-name">' + fp.name + '</h2>'
-        + '<div class="fp-detail-info">'
-          + '<span class="fp-detail-date">' + fp.date + '</span>'
-          + '<span class="fp-detail-tag" style="background:' + c.fill + '22;color:' + c.fill + ';border:1px solid ' + c.fill + '44">' + typeLabel + '</span>'
-        + '</div>'
-        + '<p class="fp-detail-desc">' + (fp.description || '') + '</p>'
-      + '</div>'
-      + '<div class="fp-detail-body">' + bodyHtml + '</div>';
-
-    view.scrollTop = 0;
+    document.getElementById('fpDetailInner').innerHTML =
+      '<h2 class="fp-detail-name">'+fp.name+'</h2>'
+      +'<div class="fp-detail-info">'
+        +'<span class="fp-detail-date">'+fp.date+'</span>'
+        +'<span class="fp-detail-tag" style="background:'+c.fill+'22;color:'+c.fill+';border:1px solid '+c.fill+'44">'+typeLabel+'</span>'
+      +'</div>'
+      +'<p class="fp-detail-desc">'+(fp.description||'')+'</p>'
+      +body;
+    det.scrollTop = 0;
   }
 
-  document.getElementById('fpBackBtn').addEventListener('click', function() {
-    document.getElementById('fpDetailView').style.display = 'none';
+  document.getElementById('fpBack').addEventListener('click', function() {
+    document.getElementById('fpDetail').style.display = 'none';
     document.getElementById('fpMapView').style.display = 'block';
-    setTimeout(function() { if (map) map.invalidateSize(); }, 100);
   });
-
-  // Leaflet is loaded synchronously above, just wait for DOM paint
-  if (document.readyState === 'complete') {
-    initMap();
-  } else {
-    window.addEventListener('load', initMap);
-  }
 })();
 </script>
