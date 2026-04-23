@@ -1,3 +1,4 @@
+# 长居
 - id: hangzhou
   name: 杭州
   date: "2000-09"
@@ -10,7 +11,7 @@
       value: 四月的杭州，天气乍暖还寒，行道树将阴凉的树影洒落在沿河的路上。能迎着春风伴着月色在操场一圈一圈走着的日子令人留念，正是因为我们知道明天有无数的不期而遇的美好。
 
 - id: kuala-lumpur
-  name: 吉隆坡 / XMUM
+  name: 吉隆坡 · XMUM
   date: "2024-09"
   lat: 2.9213
   lng: 101.7768
@@ -20,12 +21,22 @@
     - type: text
       value: 夜半秋凉，骑在回家的路上。空中飘着细细的雨丝，是那种在黑夜中看不见、却会使你浑身湿透的那种雨。
 
-- id: angkor-wat
-  name: 吴哥窟
+# 东南亚
+- id: bangkok
+  name: 曼谷
+  date: "2024-12"
+  lat: 13.7563
+  lng: 100.5018
+  type: visited
+  description: 喧嚣与虔诚并存的城市。
+  content: []
+
+- id: siem-reap
+  name: 暹粒 · 吴哥窟
   date: "2025-12"
-  lat: 13.4125
-  lng: 103.8670
-  type: special
+  lat: 13.3671
+  lng: 103.8448
+  type: visited
   description: 变身塔上的落日。来自世界各国的游客都静静地坐着，在此迎接这盛大的落日。
   content:
     - type: text
@@ -39,19 +50,239 @@
   date: "2024-06"
   lat: -8.3405
   lng: 115.0920
-  type: special
+  type: visited
   description: 神明之岛。稻田、寺庙与海浪。
-  content:
-    - type: text
-      value: 在这里，时间的流速好像变得不一样了。
+  content: []
 
+- id: singapore
+  name: 新加坡
+  date: "2024-09"
+  lat: 1.3521
+  lng: 103.8198
+  type: visited
+  description: 花园城市。整洁得像一个精心设计的展览。
+  content: []
+
+- id: malacca
+  name: 马六甲
+  date: "2024-11"
+  lat: 2.1896
+  lng: 102.2501
+  type: visited
+  description: 葡萄牙人、荷兰人、英国人与华人留下的层叠历史。
+  content: []
+
+- id: langkawi
+  name: 兰卡威
+  date: "2025-03"
+  lat: 6.3500
+  lng: 99.8000
+  type: visited
+  description: 免税岛。红树林与碧蓝的海。
+  content: []
+
+- id: hong-kong
+  name: 香港
+  date: "2024-01"
+  lat: 22.3193
+  lng: 114.1694
+  type: visited
+  description: 维多利亚港的夜景，与永远在赶路的人群。
+  content: []
+
+# 东亚
 - id: tokyo
   name: 东京
   date: "2023-07"
   lat: 35.6762
   lng: 139.6503
   type: visited
-  description: 夏天的东京，令人萌生想诅咒一切的念头的日子，一个夏季里总有那么几天。
+  description: 夏天的东京。富裕的人都忙不迭地赶到某处避暑去了，城里因此变得空空荡荡，十分惬意。
   content:
     - type: text
       value: 富裕的人都忙不迭地赶到某处避暑去了，城里因此变得空空荡荡，十分惬意。
+
+- id: seoul
+  name: 首尔
+  date: "2023-01"
+  lat: 37.5665
+  lng: 126.9780
+  type: visited
+  description: 汉江边的寒风与滚烫的部队锅。
+  content: []
+
+- id: jeju
+  name: 济州岛
+  date: "2023-01"
+  lat: 33.4890
+  lng: 126.4983
+  type: visited
+  description: 汉拿山与橘子，黑色的火山岩海岸。
+  content: []
+
+# 中国 · 华北
+- id: beijing
+  name: 北京
+  date: "2022-07"
+  lat: 39.9042
+  lng: 116.4074
+  type: visited
+  description: 故宫、胡同、宽窄之间。
+  content: []
+
+- id: tianjin
+  name: 天津
+  date: "2022-07"
+  lat: 39.3434
+  lng: 117.3616
+  type: visited
+  description: 五大道的小洋楼，和煎饼果子。
+  content: []
+
+- id: jinan
+  name: 济南
+  date: "2021-08"
+  lat: 36.6512
+  lng: 117.1201
+  type: visited
+  description: 泉城。趵突泉与大明湖。
+  content: []
+
+- id: taian
+  name: 泰安
+  date: "2021-08"
+  lat: 36.1855
+  lng: 117.0874
+  type: visited
+  description: 泰山脚下。会当凌绝顶，一览众山小。
+  content: []
+
+- id: xian
+  name: 西安
+  date: "2021-07"
+  lat: 34.3416
+  lng: 108.9398
+  type: visited
+  description: 十三朝古都。城墙、兵马俑与羊肉泡馍。
+  content: []
+
+- id: changchun
+  name: 长春
+  date: "2020-01"
+  lat: 43.8171
+  lng: 125.3235
+  type: visited
+  description: 东北的冬天，呼出来的白气和冰雪大地。
+  content: []
+
+- id: changbaishan
+  name: 长白山
+  date: "2020-01"
+  lat: 42.0105
+  lng: 128.0810
+  type: visited
+  description: 天池在云雾中若隐若现。
+  content: []
+
+# 中国 · 华东
+- id: shanghai
+  name: 上海
+  date: "2019-05"
+  lat: 31.2304
+  lng: 121.4737
+  type: visited
+  description: 外滩、弄堂，新与旧的缝隙之间。
+  content: []
+
+- id: nanjing
+  name: 南京
+  date: "2020-10"
+  lat: 32.0603
+  lng: 118.7969
+  type: visited
+  description: 秦淮河与梧桐树。六朝金粉，兴亡遗梦。
+  content: []
+
+- id: suzhou
+  name: 苏州
+  date: "2020-10"
+  lat: 31.2989
+  lng: 120.5853
+  type: visited
+  description: 园林、昆曲、小桥流水。上有天堂，下有苏杭。
+  content: []
+
+# 中国 · 华中
+- id: changsha
+  name: 长沙
+  date: "2021-06"
+  lat: 28.2282
+  lng: 112.9388
+  type: visited
+  description: 茶颜悦色与橘子洲头。
+  content: []
+
+- id: yueyang
+  name: 岳阳
+  date: "2021-06"
+  lat: 29.3570
+  lng: 113.1292
+  type: visited
+  description: 岳阳楼，洞庭湖，先天下之忧而忧。
+  content: []
+
+# 中国 · 西南
+- id: chengdu
+  name: 成都
+  date: "2022-04"
+  lat: 30.5728
+  lng: 104.0668
+  type: visited
+  description: 宽窄巷子的热闹与慢生活。成都，一座来了就不想离开的城市。
+  content: []
+
+- id: leshan
+  name: 乐山
+  date: "2022-04"
+  lat: 29.5523
+  lng: 103.7659
+  type: visited
+  description: 大佛坐于江边，千年不语。
+  content: []
+
+- id: guilin
+  name: 桂林
+  date: "2021-10"
+  lat: 25.2736
+  lng: 110.2907
+  type: visited
+  description: 桂林山水甲天下。漓江上的竹筏，喀斯特地貌的奇峰。
+  content: []
+
+# 中国 · 华南
+- id: shenzhen
+  name: 深圳
+  date: "2023-06"
+  lat: 22.5431
+  lng: 114.0579
+  type: visited
+  description: 改革开放的窗口。一个永远在建设中的城市。
+  content: []
+
+- id: beihai
+  name: 北海
+  date: "2021-10"
+  lat: 21.4733
+  lng: 109.1190
+  type: visited
+  description: 银滩，涠洲岛的出发地。
+  content: []
+
+- id: weizhou
+  name: 涠洲岛
+  date: "2021-10"
+  lat: 21.0400
+  lng: 109.1200
+  type: visited
+  description: 中国最年轻的火山岛。火山岩、珊瑚礁，还有碧蓝的南海。
+  content: []
