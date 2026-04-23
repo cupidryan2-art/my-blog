@@ -5,25 +5,20 @@ layout: default
 {% include social-links.html %}
 {% include font-sizer.html %}
 
-<!-- Leaflet CSS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="{{ '/assets/lib/leaflet.css' | relative_url }}" />
 
-<!-- Force map container to have a real pixel height immediately -->
 <style>
 #fpMap {
   width: 100%;
   height: 520px;
-  min-height: 400px;
   background: var(--bg-alt);
   border-radius: 10px;
-  display: block;
+  z-index: 1;
 }
-@media (max-height: 700px) { #fpMap { height: 380px; } }
 </style>
 
 <div class="fp-page">
 
-  <!-- Map view -->
   <div class="fp-map-view" id="fpMapView">
     <div class="fp-header">
       <div>
@@ -38,20 +33,17 @@ layout: default
     <div id="fpMap"></div>
   </div>
 
-  <!-- Detail view (hidden by default) -->
   <div class="fp-detail-view" id="fpDetailView" style="display:none">
     <button class="fp-back-btn" id="fpBackBtn">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><path d="M12 5l-7 7 7 7"/></svg>
       返回地图
     </button>
-    <div class="fp-detail-content" id="fpDetailContent"></div>
+    <div id="fpDetailContent"></div>
   </div>
 
 </div>
 
-<!-- Leaflet JS -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
+<script src="{{ '/assets/lib/leaflet.js' | relative_url }}"></script>
 <script>
 (function () {
   var FOOTPRINTS = {{ site.data.footprint | jsonify }};
@@ -59,7 +51,7 @@ layout: default
   var TYPE_COLOR = {
     lived:   { fill: '#FF9F0A', border: '#cc7e00' },
     visited: { fill: '#30C2C2', border: '#1d9494' },
-    special: { fill: '#FF375F', border: '#cc1a40' },
+    special: { fill: '#FF375F', border: '#cc1a40' }
   };
 
   function isDark() {
@@ -75,52 +67,50 @@ layout: default
   var map, tileLayer;
 
   function initMap() {
-    var container = document.getElementById('fpMap');
-    if (!container || container.offsetHeight === 0) {
-      // Container not ready yet, retry
-      setTimeout(initMap, 150);
+    if (typeof L === 'undefined') {
+      console.error('Leaflet not loaded');
       return;
     }
 
+    var container = document.getElementById('fpMap');
+    if (!container) return;
+
     map = L.map('fpMap', {
-      center: [25, 108],
+      center: [28, 108],
       zoom: 4,
-      zoomControl: false,
-      attributionControl: false,
+      zoomControl: true,
+      attributionControl: false
     });
 
     tileLayer = L.tileLayer(getTileUrl(), {
       maxZoom: 12,
-      subdomains: 'abcd',
+      subdomains: 'abcd'
     }).addTo(map);
 
-    L.control.zoom({ position: 'bottomright' }).addTo(map);
-
     FOOTPRINTS.forEach(function(fp) {
+      if (!fp.lat || !fp.lng) return;
       var c = TYPE_COLOR[fp.type] || TYPE_COLOR.visited;
       var marker = L.circleMarker([fp.lat, fp.lng], {
         radius: fp.type === 'lived' ? 11 : 8,
         fillColor: c.fill,
         color: c.border,
         weight: 2,
-        fillOpacity: 0.92,
+        fillOpacity: 0.92
       }).addTo(map);
 
       marker.bindTooltip(
-        '<strong>' + fp.name + '</strong><br><span style="font-size:0.75em;opacity:0.7">' + fp.date + '</span>',
+        '<strong>' + fp.name + '</strong><br><small>' + fp.date + '</small>',
         { direction: 'top', offset: [0, -10], className: 'fp-tooltip' }
       );
 
       marker.on('click', function() { showDetail(fp); });
     });
 
-    // Re-render tiles when dark/light mode changes
     new MutationObserver(function() {
-      tileLayer.setUrl(getTileUrl());
+      if (tileLayer) tileLayer.setUrl(getTileUrl());
     }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-mode'] });
 
-    // Force redraw to ensure tiles load
-    setTimeout(function() { map.invalidateSize(); }, 300);
+    map.invalidateSize();
   }
 
   function showDetail(fp) {
@@ -131,12 +121,12 @@ layout: default
     var c = TYPE_COLOR[fp.type] || TYPE_COLOR.visited;
     var typeLabel = { lived: '长居', visited: '到访', special: '特别记忆' }[fp.type] || fp.type;
 
-    var contentHtml = '';
+    var bodyHtml = '';
     (fp.content || []).forEach(function(block) {
       if (block.type === 'text') {
-        contentHtml += '<p class="fp-body-text">' + block.value + '</p>';
+        bodyHtml += '<p class="fp-body-text">' + block.value + '</p>';
       } else if (block.type === 'image') {
-        contentHtml += '<figure class="fp-body-img">'
+        bodyHtml += '<figure class="fp-body-img">'
           + '<img src="' + block.src + '" alt="' + (block.caption || '') + '" loading="lazy">'
           + (block.caption ? '<figcaption>' + block.caption + '</figcaption>' : '')
           + '</figure>';
@@ -145,14 +135,14 @@ layout: default
 
     document.getElementById('fpDetailContent').innerHTML =
       '<div class="fp-detail-meta">'
-      + '<h2 class="fp-detail-name">' + fp.name + '</h2>'
-      + '<div class="fp-detail-info">'
-      + '<span class="fp-detail-date">' + fp.date + '</span>'
-      + '<span class="fp-detail-tag" style="background:' + c.fill + '20;color:' + c.fill + ';border:1px solid ' + c.fill + '40">' + typeLabel + '</span>'
+        + '<h2 class="fp-detail-name">' + fp.name + '</h2>'
+        + '<div class="fp-detail-info">'
+          + '<span class="fp-detail-date">' + fp.date + '</span>'
+          + '<span class="fp-detail-tag" style="background:' + c.fill + '22;color:' + c.fill + ';border:1px solid ' + c.fill + '44">' + typeLabel + '</span>'
+        + '</div>'
+        + '<p class="fp-detail-desc">' + (fp.description || '') + '</p>'
       + '</div>'
-      + '<p class="fp-detail-desc">' + (fp.description || '') + '</p>'
-      + '</div>'
-      + '<div class="fp-detail-body">' + contentHtml + '</div>';
+      + '<div class="fp-detail-body">' + bodyHtml + '</div>';
 
     view.scrollTop = 0;
   }
@@ -160,10 +150,14 @@ layout: default
   document.getElementById('fpBackBtn').addEventListener('click', function() {
     document.getElementById('fpDetailView').style.display = 'none';
     document.getElementById('fpMapView').style.display = 'block';
-    setTimeout(function() { if (map) map.invalidateSize(); }, 150);
+    setTimeout(function() { if (map) map.invalidateSize(); }, 100);
   });
 
-  // Start after a brief delay to ensure Leaflet JS has loaded and container is painted
-  setTimeout(initMap, 200);
+  // Leaflet is loaded synchronously above, just wait for DOM paint
+  if (document.readyState === 'complete') {
+    initMap();
+  } else {
+    window.addEventListener('load', initMap);
+  }
 })();
 </script>
