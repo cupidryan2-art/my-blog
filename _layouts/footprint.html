@@ -37,14 +37,16 @@ layout: default
   background: var(--bg-alt);
   cursor: grab;
   user-select: none;
+  line-height: 0;
 }
 .fp-map-wrap:active { cursor: grabbing; }
 
-/* SVG map */
+/* Inline SVG map */
 #fpSvgMap {
   width: 100%; height: 440px; display: block;
   color: var(--border);
   transition: color 0.3s;
+  cursor: grab;
 }
 html[data-mode="dark"] #fpSvgMap { color: rgba(255,255,255,0.12); }
 
@@ -53,7 +55,8 @@ html[data-mode="dark"] #fpSvgMap { color: rgba(255,255,255,0.12); }
   cursor: pointer;
   transition: r 0.15s;
 }
-.fp-pin:hover { r: 10; }
+
+/* Tooltip label */
 .fp-pin-label {
   position: absolute; background: var(--card-bg);
   border: 1px solid var(--border); border-radius: 6px;
@@ -63,6 +66,7 @@ html[data-mode="dark"] #fpSvgMap { color: rgba(255,255,255,0.12); }
   display: none; z-index: 10;
   font-family: var(--ff-sans);
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  line-height: 1.4;
 }
 .fp-pin-label.visible { display: block; }
 .fp-pin-label strong { display: block; }
@@ -123,7 +127,7 @@ html[data-mode="dark"] #fpSvgMap { color: rgba(255,255,255,0.12); }
       </div>
     </div>
     <div class="fp-map-wrap" id="fpMapWrap">
-      <!-- SVG map loaded here by JS -->
+      {% include world-map.svg %}
       <div id="fpLabel" class="fp-pin-label"></div>
     </div>
   </div>
@@ -157,62 +161,56 @@ html[data-mode="dark"] #fpSvgMap { color: rgba(255,255,255,0.12); }
     return [x, y];
   }
 
-  // Load SVG map then add markers
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', '{{ "/assets/img/world-map.svg" | relative_url }}');
-  xhr.onload = function() {
-    if (xhr.status !== 200) return;
-    var wrap = document.getElementById('fpMapWrap');
-    var label = document.getElementById('fpLabel');
+  // SVG is already inlined — grab it directly
+  var wrap = document.getElementById('fpMapWrap');
+  var label = document.getElementById('fpLabel');
+  var svg = wrap.querySelector('svg');
 
-    // Insert SVG
-    var tmp = document.createElement('div');
-    tmp.innerHTML = xhr.responseText;
-    var svg = tmp.querySelector('svg');
-    svg.id = 'fpSvgMap';
-    svg.setAttribute('preserveAspectRatio', 'none');
-    wrap.insertBefore(svg, label);
+  if (!svg) { return; }
 
-    // Add markers
-    var ns = 'http://www.w3.org/2000/svg';
-    DATA.forEach(function(fp) {
-      var c = COLORS[fp.type] || COLORS.visited;
-      var xy = latLngToXY(fp.lat, fp.lng);
-      var circle = document.createElementNS(ns, 'circle');
-      circle.setAttribute('cx', xy[0].toFixed(1));
-      circle.setAttribute('cy', xy[1].toFixed(1));
-      circle.setAttribute('r', fp.type === 'lived' ? '7' : '5');
-      circle.setAttribute('fill', c.fill);
-      circle.setAttribute('stroke', c.stroke);
-      circle.setAttribute('stroke-width', '1.5');
-      circle.setAttribute('class', 'fp-pin');
-      circle.style.cursor = 'pointer';
+  // Set up SVG
+  svg.id = 'fpSvgMap';
+  svg.setAttribute('preserveAspectRatio', 'none');
+  svg.setAttribute('width', '100%');
+  svg.setAttribute('height', '440');
 
-      // Hover label
-      circle.addEventListener('mouseenter', function(e) {
-        var rect = wrap.getBoundingClientRect();
-        var svgRect = svg.getBoundingClientRect();
-        var scaleX = svgRect.width / W;
-        var scaleY = svgRect.height / H;
-        var px = (xy[0] * scaleX) + (svgRect.left - rect.left);
-        var py = (xy[1] * scaleY) + (svgRect.top - rect.top);
-        label.innerHTML = '<strong>' + fp.name + '</strong><small>' + fp.date + '</small>';
-        label.style.left = px + 'px';
-        label.style.top = py + 'px';
-        label.classList.add('visible');
-      });
-      circle.addEventListener('mouseleave', function() {
-        label.classList.remove('visible');
-      });
-      circle.addEventListener('click', function() {
-        label.classList.remove('visible');
-        showDetail(fp);
-      });
+  // Add markers
+  var ns = 'http://www.w3.org/2000/svg';
+  DATA.forEach(function(fp) {
+    var c = COLORS[fp.type] || COLORS.visited;
+    var xy = latLngToXY(fp.lat, fp.lng);
+    var circle = document.createElementNS(ns, 'circle');
+    circle.setAttribute('cx', xy[0].toFixed(1));
+    circle.setAttribute('cy', xy[1].toFixed(1));
+    circle.setAttribute('r', fp.type === 'lived' ? '7' : '5');
+    circle.setAttribute('fill', c.fill);
+    circle.setAttribute('stroke', c.stroke);
+    circle.setAttribute('stroke-width', '1.5');
+    circle.setAttribute('class', 'fp-pin');
 
-      svg.appendChild(circle);
+    // Hover label
+    circle.addEventListener('mouseenter', function() {
+      var rect = wrap.getBoundingClientRect();
+      var svgRect = svg.getBoundingClientRect();
+      var scaleX = svgRect.width / W;
+      var scaleY = svgRect.height / H;
+      var px = xy[0] * scaleX + (svgRect.left - rect.left);
+      var py = xy[1] * scaleY + (svgRect.top - rect.top);
+      label.innerHTML = '<strong>' + fp.name + '</strong><small>' + fp.date + '</small>';
+      label.style.left = px + 'px';
+      label.style.top = py + 'px';
+      label.classList.add('visible');
     });
-  };
-  xhr.send();
+    circle.addEventListener('mouseleave', function() {
+      label.classList.remove('visible');
+    });
+    circle.addEventListener('click', function() {
+      label.classList.remove('visible');
+      showDetail(fp);
+    });
+
+    svg.appendChild(circle);
+  });
 
   function showDetail(fp) {
     document.getElementById('fpMapView').style.display = 'none';
@@ -233,7 +231,7 @@ html[data-mode="dark"] #fpSvgMap { color: rgba(255,255,255,0.12); }
       +'</div>'
       +'<p class="fp-detail-desc">'+(fp.description||'')+'</p>'
       +body;
-    det.scrollTop = 0;
+    window.scrollTo(0, 0);
   }
 
   document.getElementById('fpBack').addEventListener('click', function() {
