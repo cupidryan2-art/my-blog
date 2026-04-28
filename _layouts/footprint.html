@@ -8,6 +8,7 @@ layout: default
 <style>
 .fp-page { width: 100%; padding-bottom: 3rem; }
 
+/* ── Header ──────────────────────────────────── */
 .fp-header {
   display: flex; align-items: center; justify-content: space-between;
   padding: 2rem 0 1.2rem;
@@ -20,86 +21,83 @@ layout: default
 .fp-legend { display: flex; align-items: center; gap: 1rem; }
 .fp-legend-item {
   display: flex; align-items: center; gap: 5px;
-  font-size: 0.72rem; color: var(--text-3);
-  font-family: var(--ff-sans);
+  font-size: 0.72rem; color: var(--text-3); font-family: var(--ff-sans);
 }
 .fp-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; }
 .fp-dot-lived   { background: #FF9F0A; }
 .fp-dot-visited { background: #30C2C2; }
 
-/* Map container */
+/* ── Map container ────────────────────────────── */
 .fp-map-wrap {
   position: relative; width: 100%;
   border-radius: 12px; overflow: hidden;
   border: 1px solid var(--border);
   background: #d6e8f5;
-  user-select: none;
-  line-height: 0;
+  user-select: none; line-height: 0;
   box-shadow: 0 2px 16px rgba(0,0,0,0.06);
 }
 html[data-mode="dark"] .fp-map-wrap { background: #0e1a2b; }
 
-/* Map hint */
-.fp-hint {
-  position: absolute; bottom: 10px; right: 12px;
-  font-size: 0.65rem; color: rgba(0,0,0,0.35);
-  font-family: var(--ff-sans); pointer-events: none; z-index: 5;
-}
-html[data-mode="dark"] .fp-hint { color: rgba(255,255,255,0.3); }
-
-/* Zoom controls */
-.fp-zoom {
-  position: absolute; top: 10px; right: 12px;
-  display: flex; flex-direction: column; gap: 3px; z-index: 10;
-}
-.fp-zoom-btn {
-  width: 26px; height: 26px; border-radius: 6px;
-  border: 1px solid rgba(0,0,0,0.12); background: #fff;
-  color: #555; font-size: 14px; line-height: 1;
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-  transition: background 0.15s;
-  font-family: monospace;
-}
-.fp-zoom-btn:hover { background: #f0f0f0; }
-html[data-mode="dark"] .fp-zoom-btn {
-  background: #1e2d3f; border-color: rgba(255,255,255,0.15); color: #ccc;
-}
-html[data-mode="dark"] .fp-zoom-btn:hover { background: #263444; }
-
-/* SVG map */
+/* ── SVG ──────────────────────────────────────── */
 #fpSvgMap {
   width: 100%; height: 440px; display: block;
   cursor: grab;
 }
 #fpSvgMap:active { cursor: grabbing; }
-
-/* Country colors in dark mode */
-html[data-mode="dark"] #fpSvgMap g#countries {
+html[data-mode="dark"] #fpSvgMap #countries {
   fill: #1e3050 !important;
   stroke: rgba(255,255,255,0.05) !important;
 }
 
-/* Tooltip */
-.fp-label {
+/* ── Zoom controls ────────────────────────────── */
+.fp-zoom {
+  position: absolute; top: 10px; right: 12px;
+  display: flex; flex-direction: column; gap: 3px; z-index: 10;
+}
+.fp-zoom-btn {
+  width: 28px; height: 28px; border-radius: 7px;
+  border: 1px solid rgba(0,0,0,0.12); background: #fff;
+  color: #444; font-size: 15px; line-height: 1;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: background 0.12s; font-family: monospace;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+.fp-zoom-btn:hover { background: #f4f4f4; }
+html[data-mode="dark"] .fp-zoom-btn {
+  background: #1e2d3f; border-color: rgba(255,255,255,0.14); color: #ccc;
+}
+html[data-mode="dark"] .fp-zoom-btn:hover { background: #253544; }
+
+/* ── Hint ─────────────────────────────────────── */
+.fp-hint {
+  position: absolute; bottom: 8px; right: 12px;
+  font-size: 0.62rem; color: rgba(0,0,0,0.3);
+  font-family: var(--ff-sans); pointer-events: none; z-index: 5;
+  letter-spacing: 0.02em;
+}
+html[data-mode="dark"] .fp-hint { color: rgba(255,255,255,0.25); }
+
+/* ── Tooltip ──────────────────────────────────── */
+.fp-tooltip {
   position: absolute; background: #fff;
   border: 1px solid rgba(0,0,0,0.1); border-radius: 8px;
-  padding: 5px 11px; pointer-events: none;
-  transform: translate(-50%, -130%);
+  padding: 5px 12px; pointer-events: none;
+  transform: translate(-50%, -135%);
   display: none; z-index: 20;
   font-family: var(--ff-sans);
   box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-  line-height: 1.5;
+  line-height: 1.5; white-space: nowrap;
 }
-html[data-mode="dark"] .fp-label {
+html[data-mode="dark"] .fp-tooltip {
   background: #1e2d3f; border-color: rgba(255,255,255,0.12);
 }
-.fp-label.show { display: block; }
-.fp-label-name { font-size: 0.8rem; font-weight: 600; color: #111; display: block; }
-.fp-label-date { font-size: 0.7rem; color: #888; }
-html[data-mode="dark"] .fp-label-name { color: #f0f0f0; }
-html[data-mode="dark"] .fp-label-date { color: #8a9ab0; }
+.fp-tooltip.show { display: block; }
+.fp-tt-name { font-size: 0.8rem; font-weight: 600; color: #111; display: block; }
+.fp-tt-date { font-size: 0.7rem; color: #888; }
+html[data-mode="dark"] .fp-tt-name { color: #f0f0f0; }
+html[data-mode="dark"] .fp-tt-date { color: #8a9ab0; }
 
-/* Detail view */
+/* ── Detail panel ─────────────────────────────── */
 .fp-detail { display: none; padding-top: 1.5rem; }
 .fp-back-btn {
   display: inline-flex; align-items: center; gap: 6px;
@@ -138,9 +136,56 @@ html[data-mode="dark"] .fp-label-date { color: #8a9ab0; }
   font-size: 0.75rem; color: var(--text-3);
   text-align: center; margin-top: 0.5rem; font-style: italic;
 }
+
+/* ── Places list ──────────────────────────────── */
+.fp-places {
+  margin-top: 2.8rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+.fp-places-header {
+  display: flex; align-items: baseline; gap: 0.8rem;
+  margin-bottom: 1.8rem;
+}
+.fp-places-title {
+  font-family: var(--ff-serif); font-size: 1.2rem; font-weight: 700;
+  color: var(--text-1); margin: 0; letter-spacing: -0.01em;
+}
+.fp-places-count {
+  font-size: 0.72rem; color: var(--text-3); font-family: var(--ff-sans);
+}
+.fp-tl-row {
+  display: flex; align-items: flex-start; gap: 2rem;
+  margin-bottom: 1.1rem;
+}
+.fp-tl-year {
+  font-size: 0.88rem; font-weight: 600; color: var(--text-3);
+  font-family: var(--ff-sans); min-width: 42px; padding-top: 5px;
+  flex-shrink: 0;
+}
+.fp-tl-chips { display: flex; flex-wrap: wrap; gap: 7px; flex: 1; }
+.fp-chip {
+  font-size: 0.78rem; font-family: var(--ff-sans);
+  padding: 4px 13px; border-radius: 999px;
+  cursor: pointer; transition: opacity 0.15s, transform 0.12s;
+  line-height: 1.5;
+}
+.fp-chip:hover { opacity: 0.75; transform: translateY(-1px); }
+.fp-chip-lived {
+  background: #FF9F0A1a; color: #c97800;
+  border: 1px solid #FF9F0A55;
+}
+.fp-chip-visited {
+  background: #30C2C21a; color: #1a8a8a;
+  border: 1px solid #30C2C255;
+}
+html[data-mode="dark"] .fp-chip-lived   { background: #FF9F0A22; color: #FF9F0A; border-color: #FF9F0A44; }
+html[data-mode="dark"] .fp-chip-visited { background: #30C2C222; color: #30C2C2; border-color: #30C2C244; }
 </style>
 
 <div class="fp-page">
+
+  <!-- ── Map view ─────────────────────────────── -->
   <div id="fpMapView">
     <div class="fp-header">
       <div>
@@ -155,19 +200,20 @@ html[data-mode="dark"] .fp-label-date { color: #8a9ab0; }
 
     <div class="fp-map-wrap" id="fpMapWrap">
       {% include world-map.svg %}
-      <div class="fp-label" id="fpLabel">
-        <span class="fp-label-name" id="fpLabelName"></span>
-        <span class="fp-label-date" id="fpLabelDate"></span>
+      <div class="fp-tooltip" id="fpTooltip">
+        <span class="fp-tt-name" id="fpTtName"></span>
+        <span class="fp-tt-date" id="fpTtDate"></span>
       </div>
       <div class="fp-zoom">
-        <button class="fp-zoom-btn" id="fpZoomIn"  title="放大">+</button>
-        <button class="fp-zoom-btn" id="fpZoomOut" title="缩小">−</button>
-        <button class="fp-zoom-btn" id="fpZoomReset" title="重置" style="font-size:11px">⊙</button>
+        <button class="fp-zoom-btn" id="fpZoomIn">+</button>
+        <button class="fp-zoom-btn" id="fpZoomOut">−</button>
+        <button class="fp-zoom-btn" id="fpZoomReset" style="font-size:12px">⊙</button>
       </div>
-      <div class="fp-hint">滚轮缩放 · 拖拽平移 · 点击查看详情</div>
+      <div class="fp-hint">滚轮缩放 · 拖拽平移 · 点击标记查看详情</div>
     </div>
   </div>
 
+  <!-- ── Detail view ──────────────────────────── -->
   <div class="fp-detail" id="fpDetail">
     <button class="fp-back-btn" id="fpBack">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -177,177 +223,202 @@ html[data-mode="dark"] .fp-label-date { color: #8a9ab0; }
     </button>
     <div id="fpDetailInner"></div>
   </div>
-</div>
+
+  <!-- ── Places list (always visible) ─────────── -->
+  <div class="fp-places">
+    <div class="fp-places-header">
+      <h2 class="fp-places-title">去过的地方</h2>
+      <span class="fp-places-count">{{ site.data.footprint | size }} 个地点</span>
+    </div>
+    <div id="fpPlacesList">
+      {% assign sorted_fps = site.data.footprint | sort: "date" | reverse %}
+      {% assign prev_year = "" %}
+      {% for fp in sorted_fps %}
+        {% assign cur_year = fp.date | slice: 0, 4 %}
+        {% if cur_year != prev_year %}
+          {% unless forloop.first %}</div></div>{% endunless %}
+          <div class="fp-tl-row">
+            <div class="fp-tl-year">{{ cur_year }}</div>
+            <div class="fp-tl-chips">
+          {% assign prev_year = cur_year %}
+        {% endif %}
+        <button class="fp-chip fp-chip-{{ fp.type }}" data-id="{{ fp.id }}">{{ fp.name }}</button>
+        {% if forloop.last %}</div></div>{% endif %}
+      {% endfor %}
+    </div>
+  </div>
+
+</div><!-- .fp-page -->
 
 <script>
 (function () {
-  // Full footprint data for detail panel
   var DATA = {{ site.data.footprint | jsonify }};
   if (!Array.isArray(DATA)) DATA = [];
   var byId = {};
   DATA.forEach(function (fp) { byId[fp.id] = fp; });
 
-  var COLORS = {
-    lived:   '#FF9F0A',
-    visited: '#30C2C2',
-    special: '#FF375F'
-  };
+  var COLORS = { lived: '#FF9F0A', visited: '#30C2C2', special: '#FF375F' };
+  var W = 960, H = 500;
 
-  var wrap  = document.getElementById('fpMapWrap');
-  var label = document.getElementById('fpLabel');
-  var lname = document.getElementById('fpLabelName');
-  var ldate = document.getElementById('fpLabelDate');
-  var svg   = wrap ? wrap.querySelector('svg') : null;
+  var wrap    = document.getElementById('fpMapWrap');
+  var tooltip = document.getElementById('fpTooltip');
+  var ttName  = document.getElementById('fpTtName');
+  var ttDate  = document.getElementById('fpTtDate');
+  var svg     = wrap ? wrap.querySelector('svg') : null;
   if (!svg) return;
 
-  // ── Set up SVG ──────────────────────────────────────────────
+  // ── SVG setup ────────────────────────────────
   svg.id = 'fpSvgMap';
   svg.setAttribute('preserveAspectRatio', 'none');
-  svg.style.width  = '100%';
-  svg.style.height = '440px';
+  svg.setAttribute('width',  '100%');
+  svg.setAttribute('height', '440');
 
-  var W = 960, H = 500;
-  var vb = { x: 0, y: 0, w: W, h: H }; // current viewBox
-
-  function setVB() {
-    // Clamp pan so map edges don't scroll fully off screen
-    vb.w = Math.max(100, Math.min(W, vb.w));
-    vb.h = Math.max(52,  Math.min(H, vb.h));
-    vb.x = Math.max(-vb.w * 0.3, Math.min(W - vb.w * 0.7, vb.x));
-    vb.y = Math.max(-vb.h * 0.3, Math.min(H - vb.h * 0.7, vb.y));
-    svg.setAttribute('viewBox', [vb.x.toFixed(1), vb.y.toFixed(1),
-                                  vb.w.toFixed(1), vb.h.toFixed(1)].join(' '));
+  // Initial viewBox: crop Antarctica (show to ~77°S instead of ~85°S)
+  var vb = { x: 0, y: 0, w: W, h: 440 };
+  function applyVB() {
+    // Clamp to prevent scrolling fully off-screen
+    vb.w = Math.max(120, Math.min(W * 2, vb.w));
+    vb.h = Math.max(62,  Math.min(H * 2, vb.h));
+    vb.x = Math.max(-vb.w * 0.4, Math.min(W - vb.w * 0.6, vb.x));
+    vb.y = Math.max(-vb.h * 0.4, Math.min(H - vb.h * 0.6, vb.y));
+    svg.setAttribute('viewBox', vb.x.toFixed(1) + ' ' + vb.y.toFixed(1) +
+                                ' ' + vb.w.toFixed(1) + ' ' + vb.h.toFixed(1));
   }
-  setVB();
+  applyVB();
 
-  // ── Zoom/Pan ────────────────────────────────────────────────
-  svg.addEventListener('wheel', function (e) {
+  // ── Wheel zoom (bound to wrap, not svg) ──────
+  wrap.addEventListener('wheel', function (e) {
     e.preventDefault();
-    label.classList.remove('show');
-    var factor = e.deltaY > 0 ? 1.18 : 0.85;
-    var sr = svg.getBoundingClientRect();
-    var mx = vb.x + (e.clientX - sr.left) / sr.width  * vb.w;
-    var my = vb.y + (e.clientY - sr.top)  / sr.height * vb.h;
+    tooltip.classList.remove('show');
+    var factor = e.deltaY > 0 ? 1.18 : 0.847;
+    var sr  = svg.getBoundingClientRect();
+    var mx  = vb.x + (e.clientX - sr.left) / sr.width  * vb.w;
+    var my  = vb.y + (e.clientY - sr.top)  / sr.height * vb.h;
     vb.w *= factor; vb.h *= factor;
     vb.x = mx - (e.clientX - sr.left) / sr.width  * vb.w;
     vb.y = my - (e.clientY - sr.top)  / sr.height * vb.h;
-    setVB();
+    applyVB();
   }, { passive: false });
 
+  // ── Drag pan ──────────────────────────────────
   var drag = { on: false, sx: 0, sy: 0, ox: 0, oy: 0 };
   svg.addEventListener('mousedown', function (e) {
+    if (e.button !== 0) return;
     if (e.target.classList.contains('fp-pin')) return;
-    drag.on = true; drag.sx = e.clientX; drag.sy = e.clientY;
-    drag.ox = vb.x; drag.oy = vb.y;
+    drag.on = true;
+    drag.sx = e.clientX; drag.sy = e.clientY;
+    drag.ox = vb.x;      drag.oy = vb.y;
+    e.preventDefault();
   });
   document.addEventListener('mousemove', function (e) {
     if (!drag.on) return;
     var sr = svg.getBoundingClientRect();
     vb.x = drag.ox - (e.clientX - drag.sx) / sr.width  * vb.w;
     vb.y = drag.oy - (e.clientY - drag.sy) / sr.height * vb.h;
-    setVB();
+    applyVB();
   });
   document.addEventListener('mouseup', function () { drag.on = false; });
 
-  // Touch pan/pinch
-  var touch = { prev: null };
-  wrap.addEventListener('touchstart', function (e) {
-    touch.prev = e.touches;
-  }, { passive: true });
+  // ── Touch pan / pinch zoom ────────────────────
+  var tc = { prev: null };
+  wrap.addEventListener('touchstart',  function (e) { tc.prev = e.touches; }, { passive: true });
   wrap.addEventListener('touchmove', function (e) {
     e.preventDefault();
-    label.classList.remove('show');
-    var t = e.touches;
-    if (t.length === 1 && touch.prev && touch.prev.length === 1) {
-      var sr = svg.getBoundingClientRect();
-      vb.x -= (t[0].clientX - touch.prev[0].clientX) / sr.width  * vb.w;
-      vb.y -= (t[0].clientY - touch.prev[0].clientY) / sr.height * vb.h;
-      setVB();
-    } else if (t.length === 2 && touch.prev && touch.prev.length === 2) {
-      var d0 = Math.hypot(touch.prev[0].clientX - touch.prev[1].clientX,
-                          touch.prev[0].clientY - touch.prev[1].clientY);
-      var d1 = Math.hypot(t[0].clientX - t[1].clientX,
-                          t[0].clientY - t[1].clientY);
-      if (d0 > 0) {
-        var factor = d0 / d1;
-        var mx = ((t[0].clientX + t[1].clientX) / 2);
-        var my = ((t[0].clientY + t[1].clientY) / 2);
-        var sr = svg.getBoundingClientRect();
-        var bx = vb.x + (mx - sr.left) / sr.width  * vb.w;
-        var by = vb.y + (my - sr.top)  / sr.height * vb.h;
-        vb.w *= factor; vb.h *= factor;
-        vb.x = bx - (mx - sr.left) / sr.width  * vb.w;
-        vb.y = by - (my - sr.top)  / sr.height * vb.h;
-        setVB();
+    tooltip.classList.remove('show');
+    var t = e.touches, p = tc.prev;
+    if (!p) { tc.prev = t; return; }
+    var sr = svg.getBoundingClientRect();
+    if (t.length === 1 && p.length >= 1) {
+      vb.x -= (t[0].clientX - p[0].clientX) / sr.width  * vb.w;
+      vb.y -= (t[0].clientY - p[0].clientY) / sr.height * vb.h;
+      applyVB();
+    } else if (t.length === 2 && p.length === 2) {
+      var d0 = Math.hypot(p[0].clientX-p[1].clientX, p[0].clientY-p[1].clientY);
+      var d1 = Math.hypot(t[0].clientX-t[1].clientX, t[0].clientY-t[1].clientY);
+      if (d0 > 1) {
+        var f  = d0 / d1;
+        var mx = ((t[0].clientX+t[1].clientX)/2 - sr.left)  / sr.width  * vb.w + vb.x;
+        var my = ((t[0].clientY+t[1].clientY)/2 - sr.top)   / sr.height * vb.h + vb.y;
+        vb.w *= f; vb.h *= f;
+        vb.x = mx - ((t[0].clientX+t[1].clientX)/2 - sr.left) / sr.width  * vb.w;
+        vb.y = my - ((t[0].clientY+t[1].clientY)/2 - sr.top)  / sr.height * vb.h;
+        applyVB();
       }
     }
-    touch.prev = t;
+    tc.prev = t;
   }, { passive: false });
 
-  // Zoom buttons
-  function zoomAt(factor) {
-    label.classList.remove('show');
-    var cx = vb.x + vb.w / 2, cy = vb.y + vb.h / 2;
-    vb.w *= factor; vb.h *= factor;
-    vb.x = cx - vb.w / 2; vb.y = cy - vb.h / 2;
-    setVB();
+  // ── Zoom buttons ──────────────────────────────
+  function zoomCenter(f) {
+    tooltip.classList.remove('show');
+    var cx = vb.x + vb.w/2, cy = vb.y + vb.h/2;
+    vb.w *= f; vb.h *= f;
+    vb.x = cx - vb.w/2; vb.y = cy - vb.h/2;
+    applyVB();
   }
-  document.getElementById('fpZoomIn').addEventListener('click',    function () { zoomAt(0.7); });
-  document.getElementById('fpZoomOut').addEventListener('click',   function () { zoomAt(1.43); });
-  document.getElementById('fpZoomReset').addEventListener('click', function () {
-    vb = { x: 0, y: 0, w: W, h: H }; setVB();
-  });
+  document.getElementById('fpZoomIn').onclick    = function () { zoomCenter(0.65); };
+  document.getElementById('fpZoomOut').onclick   = function () { zoomCenter(1.54); };
+  document.getElementById('fpZoomReset').onclick = function () {
+    vb = { x:0, y:0, w:W, h:440 }; applyVB();
+  };
 
-  // ── Marker interactions ──────────────────────────────────────
-  var pins = svg.querySelectorAll('.fp-pin');
-  pins.forEach(function (pin) {
+  // ── Marker hover + click ──────────────────────
+  svg.querySelectorAll('.fp-pin').forEach(function (pin) {
     pin.addEventListener('mouseenter', function () {
       var pr = pin.getBoundingClientRect();
       var wr = wrap.getBoundingClientRect();
-      label.style.left = (pr.left + pr.width / 2 - wr.left) + 'px';
-      label.style.top  = (pr.top  - wr.top) + 'px';
-      lname.textContent = pin.dataset.name;
-      ldate.textContent = pin.dataset.date;
-      label.classList.add('show');
+      tooltip.style.left = (pr.left + pr.width/2 - wr.left) + 'px';
+      tooltip.style.top  = (pr.top  - wr.top) + 'px';
+      ttName.textContent = pin.dataset.name;
+      ttDate.textContent = pin.dataset.date;
+      tooltip.classList.add('show');
     });
-    pin.addEventListener('mouseleave', function () {
-      label.classList.remove('show');
-    });
+    pin.addEventListener('mouseleave', function () { tooltip.classList.remove('show'); });
     pin.addEventListener('click', function (e) {
       e.stopPropagation();
-      label.classList.remove('show');
-      showDetail(pin.dataset.id);
+      tooltip.classList.remove('show');
+      openDetail(pin.dataset.id);
     });
   });
 
-  // ── Detail panel ─────────────────────────────────────────────
-  function showDetail(id) {
+  // ── Place list chips ──────────────────────────
+  document.querySelectorAll('.fp-chip').forEach(function (chip) {
+    chip.addEventListener('click', function () { openDetail(chip.dataset.id); });
+  });
+
+  // ── Detail panel ──────────────────────────────
+  function openDetail(id) {
     var fp = byId[id];
-    if (!fp) return;
+    // Fallback: use SVG data attributes if DATA missing
+    if (!fp) {
+      var pin = svg.querySelector('[data-id="'+id+'"]');
+      if (!pin) return;
+      fp = { id:id, name:pin.dataset.name, date:pin.dataset.date,
+             type:pin.dataset.type, description:'', content:[] };
+    }
     document.getElementById('fpMapView').style.display = 'none';
     document.getElementById('fpDetail').style.display  = 'block';
-    var fill  = COLORS[fp.type] || COLORS.visited;
-    var tlabel = { lived: '长居', visited: '到访', special: '特别记忆' }[fp.type] || fp.type;
-    var body  = '';
+    var fill   = COLORS[fp.type] || COLORS.visited;
+    var tlabel = { lived:'长居', visited:'到访', special:'特别记忆' }[fp.type] || fp.type;
+    var body   = '';
     (fp.content || []).forEach(function (b) {
       if (b.type === 'text')
         body += '<p class="fp-body-text">' + b.value + '</p>';
       else if (b.type === 'image')
         body += '<figure class="fp-body-img"><img src="' + b.src + '" alt="' +
-                (b.caption || '') + '" loading="lazy">' +
-                (b.caption ? '<figcaption>' + b.caption + '</figcaption>' : '') +
+                (b.caption||'') + '" loading="lazy">' +
+                (b.caption ? '<figcaption>'+b.caption+'</figcaption>' : '') +
                 '</figure>';
     });
     document.getElementById('fpDetailInner').innerHTML =
       '<h2 class="fp-detail-name">' + fp.name + '</h2>' +
       '<div class="fp-detail-info">' +
         '<span class="fp-detail-date">' + fp.date + '</span>' +
-        '<span class="fp-detail-tag" style="background:' + fill + '22;color:' + fill +
-        ';border:1px solid ' + fill + '44">' + tlabel + '</span>' +
+        '<span class="fp-detail-tag" style="background:'+fill+'22;color:'+fill+';border:1px solid '+fill+'44">' + tlabel + '</span>' +
       '</div>' +
-      '<p class="fp-detail-desc">' + (fp.description || '') + '</p>' +
+      '<p class="fp-detail-desc">' + (fp.description||'') + '</p>' +
       body;
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   document.getElementById('fpBack').addEventListener('click', function () {
