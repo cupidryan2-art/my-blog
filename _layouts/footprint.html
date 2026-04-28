@@ -8,7 +8,6 @@ layout: default
 <style>
 .fp-page { width: 100%; padding-bottom: 3rem; }
 
-/* ── Header ──────────────────────────────────── */
 .fp-header {
   display: flex; align-items: center; justify-content: space-between;
   padding: 2rem 0 1.2rem;
@@ -27,7 +26,7 @@ layout: default
 .fp-dot-lived   { background: #FF9F0A; }
 .fp-dot-visited { background: #30C2C2; }
 
-/* ── Map container ────────────────────────────── */
+/* Map */
 .fp-map-wrap {
   position: relative; width: 100%;
   border-radius: 12px; overflow: hidden;
@@ -38,54 +37,62 @@ layout: default
 }
 html[data-mode="dark"] .fp-map-wrap { background: #0e1a2b; }
 
-/* ── SVG ──────────────────────────────────────── */
 #fpSvgMap {
   width: 100%; height: 440px; display: block;
   cursor: grab;
+  pointer-events: all;
 }
 #fpSvgMap:active { cursor: grabbing; }
+
+/* Make pins always clickable */
+.fp-pin {
+  cursor: pointer !important;
+  pointer-events: all !important;
+}
+.fp-pin:hover { opacity: 0.8; }
+
+/* Country dark mode */
 html[data-mode="dark"] #fpSvgMap #countries {
   fill: #1e3050 !important;
   stroke: rgba(255,255,255,0.05) !important;
 }
 
-/* ── Zoom controls ────────────────────────────── */
-.fp-zoom {
+/* Controls */
+.fp-controls {
   position: absolute; top: 10px; right: 12px;
   display: flex; flex-direction: column; gap: 3px; z-index: 10;
 }
-.fp-zoom-btn {
-  width: 28px; height: 28px; border-radius: 7px;
-  border: 1px solid rgba(0,0,0,0.12); background: #fff;
+.fp-btn {
+  width: 30px; height: 30px; border-radius: 7px;
+  border: 1px solid rgba(0,0,0,0.13); background: rgba(255,255,255,0.95);
   color: #444; font-size: 15px; line-height: 1;
   cursor: pointer; display: flex; align-items: center; justify-content: center;
-  transition: background 0.12s; font-family: monospace;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1); font-weight: 500;
+  transition: background 0.12s;
 }
-.fp-zoom-btn:hover { background: #f4f4f4; }
-html[data-mode="dark"] .fp-zoom-btn {
-  background: #1e2d3f; border-color: rgba(255,255,255,0.14); color: #ccc;
+.fp-btn:hover { background: #fff; }
+html[data-mode="dark"] .fp-btn {
+  background: rgba(30,45,63,0.95); border-color: rgba(255,255,255,0.14); color: #ccc;
 }
-html[data-mode="dark"] .fp-zoom-btn:hover { background: #253544; }
+html[data-mode="dark"] .fp-btn:hover { background: #1e2d3f; }
+.fp-btn-sep { height: 4px; }
 
-/* ── Hint ─────────────────────────────────────── */
 .fp-hint {
   position: absolute; bottom: 8px; right: 12px;
-  font-size: 0.62rem; color: rgba(0,0,0,0.3);
+  font-size: 0.62rem; color: rgba(0,0,0,0.28);
   font-family: var(--ff-sans); pointer-events: none; z-index: 5;
-  letter-spacing: 0.02em;
 }
-html[data-mode="dark"] .fp-hint { color: rgba(255,255,255,0.25); }
+html[data-mode="dark"] .fp-hint { color: rgba(255,255,255,0.22); }
 
-/* ── Tooltip ──────────────────────────────────── */
+/* Tooltip */
 .fp-tooltip {
   position: absolute; background: #fff;
   border: 1px solid rgba(0,0,0,0.1); border-radius: 8px;
   padding: 5px 12px; pointer-events: none;
-  transform: translate(-50%, -135%);
-  display: none; z-index: 20;
+  transform: translate(-50%, -138%);
+  display: none; z-index: 30;
   font-family: var(--ff-sans);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.14);
   line-height: 1.5; white-space: nowrap;
 }
 html[data-mode="dark"] .fp-tooltip {
@@ -97,14 +104,13 @@ html[data-mode="dark"] .fp-tooltip {
 html[data-mode="dark"] .fp-tt-name { color: #f0f0f0; }
 html[data-mode="dark"] .fp-tt-date { color: #8a9ab0; }
 
-/* ── Detail panel ─────────────────────────────── */
+/* Detail */
 .fp-detail { display: none; padding-top: 1.5rem; }
 .fp-back-btn {
   display: inline-flex; align-items: center; gap: 6px;
   font-size: 0.82rem; font-family: var(--ff-sans);
   color: var(--text-2); background: none; border: none;
-  padding: 0; cursor: pointer; margin-bottom: 2rem;
-  transition: color 0.2s;
+  padding: 0; cursor: pointer; margin-bottom: 2rem; transition: color 0.2s;
 }
 .fp-back-btn:hover { color: var(--text-1); }
 .fp-detail-name {
@@ -137,55 +143,40 @@ html[data-mode="dark"] .fp-tt-date { color: #8a9ab0; }
   text-align: center; margin-top: 0.5rem; font-style: italic;
 }
 
-/* ── Places list ──────────────────────────────── */
+/* Places list */
 .fp-places {
-  margin-top: 2.8rem;
-  padding-top: 2rem;
+  margin-top: 2.8rem; padding-top: 2rem;
   border-top: 1px solid var(--border);
 }
 .fp-places-header {
-  display: flex; align-items: baseline; gap: 0.8rem;
-  margin-bottom: 1.8rem;
+  display: flex; align-items: baseline; gap: 0.8rem; margin-bottom: 1.8rem;
 }
 .fp-places-title {
   font-family: var(--ff-serif); font-size: 1.2rem; font-weight: 700;
   color: var(--text-1); margin: 0; letter-spacing: -0.01em;
 }
-.fp-places-count {
-  font-size: 0.72rem; color: var(--text-3); font-family: var(--ff-sans);
-}
-.fp-tl-row {
-  display: flex; align-items: flex-start; gap: 2rem;
-  margin-bottom: 1.1rem;
-}
+.fp-places-count { font-size: 0.72rem; color: var(--text-3); font-family: var(--ff-sans); }
+.fp-tl-row { display: flex; align-items: flex-start; gap: 2rem; margin-bottom: 1.1rem; }
 .fp-tl-year {
   font-size: 0.88rem; font-weight: 600; color: var(--text-3);
-  font-family: var(--ff-sans); min-width: 42px; padding-top: 5px;
-  flex-shrink: 0;
+  font-family: var(--ff-sans); min-width: 42px; padding-top: 5px; flex-shrink: 0;
 }
 .fp-tl-chips { display: flex; flex-wrap: wrap; gap: 7px; flex: 1; }
 .fp-chip {
   font-size: 0.78rem; font-family: var(--ff-sans);
   padding: 4px 13px; border-radius: 999px;
-  cursor: pointer; transition: opacity 0.15s, transform 0.12s;
-  line-height: 1.5;
+  cursor: pointer; transition: opacity 0.15s, transform 0.12s; line-height: 1.5;
+  background: none;
 }
-.fp-chip:hover { opacity: 0.75; transform: translateY(-1px); }
-.fp-chip-lived {
-  background: #FF9F0A1a; color: #c97800;
-  border: 1px solid #FF9F0A55;
-}
-.fp-chip-visited {
-  background: #30C2C21a; color: #1a8a8a;
-  border: 1px solid #30C2C255;
-}
-html[data-mode="dark"] .fp-chip-lived   { background: #FF9F0A22; color: #FF9F0A; border-color: #FF9F0A44; }
-html[data-mode="dark"] .fp-chip-visited { background: #30C2C222; color: #30C2C2; border-color: #30C2C244; }
+.fp-chip:hover { opacity: 0.72; transform: translateY(-1px); }
+.fp-chip-lived   { background:#FF9F0A1a; color:#c97800; border:1px solid #FF9F0A55; }
+.fp-chip-visited { background:#30C2C21a; color:#1a8a8a; border:1px solid #30C2C255; }
+html[data-mode="dark"] .fp-chip-lived   { background:#FF9F0A22; color:#FF9F0A; border-color:#FF9F0A44; }
+html[data-mode="dark"] .fp-chip-visited { background:#30C2C222; color:#30C2C2; border-color:#30C2C244; }
 </style>
 
 <div class="fp-page">
 
-  <!-- ── Map view ─────────────────────────────── -->
   <div id="fpMapView">
     <div class="fp-header">
       <div>
@@ -204,16 +195,17 @@ html[data-mode="dark"] .fp-chip-visited { background: #30C2C222; color: #30C2C2;
         <span class="fp-tt-name" id="fpTtName"></span>
         <span class="fp-tt-date" id="fpTtDate"></span>
       </div>
-      <div class="fp-zoom">
-        <button class="fp-zoom-btn" id="fpZoomIn">+</button>
-        <button class="fp-zoom-btn" id="fpZoomOut">−</button>
-        <button class="fp-zoom-btn" id="fpZoomReset" style="font-size:12px">⊙</button>
+      <div class="fp-controls">
+        <button class="fp-btn" id="fpZoomIn"    title="放大">+</button>
+        <button class="fp-btn" id="fpZoomOut"   title="缩小">−</button>
+        <div class="fp-btn-sep"></div>
+        <button class="fp-btn" id="fpViewAsia"  title="聚焦亚洲" style="font-size:11px;font-weight:600">亚</button>
+        <button class="fp-btn" id="fpViewWorld" title="世界全图" style="font-size:11px;font-weight:600">全</button>
       </div>
-      <div class="fp-hint">滚轮缩放 · 拖拽平移 · 点击标记查看详情</div>
+      <div class="fp-hint">滚轮缩放 · 拖拽平移 · 点标记查看详情</div>
     </div>
   </div>
 
-  <!-- ── Detail view ──────────────────────────── -->
   <div class="fp-detail" id="fpDetail">
     <button class="fp-back-btn" id="fpBack">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -224,90 +216,89 @@ html[data-mode="dark"] .fp-chip-visited { background: #30C2C222; color: #30C2C2;
     <div id="fpDetailInner"></div>
   </div>
 
-  <!-- ── Places list (always visible) ─────────── -->
+  <!-- Places list -->
   <div class="fp-places">
     <div class="fp-places-header">
       <h2 class="fp-places-title">去过的地方</h2>
       <span class="fp-places-count">{{ site.data.footprint | size }} 个地点</span>
     </div>
-    <div id="fpPlacesList">
-      {% assign sorted_fps = site.data.footprint | sort: "date" | reverse %}
-      {% assign prev_year = "" %}
-      {% for fp in sorted_fps %}
-        {% assign cur_year = fp.date | slice: 0, 4 %}
-        {% if cur_year != prev_year %}
-          {% unless forloop.first %}</div></div>{% endunless %}
-          <div class="fp-tl-row">
-            <div class="fp-tl-year">{{ cur_year }}</div>
-            <div class="fp-tl-chips">
-          {% assign prev_year = cur_year %}
-        {% endif %}
-        <button class="fp-chip fp-chip-{{ fp.type }}" data-id="{{ fp.id }}">{{ fp.name }}</button>
-        {% if forloop.last %}</div></div>{% endif %}
-      {% endfor %}
-    </div>
+    {% assign sorted_fps = site.data.footprint | sort: "date" | reverse %}
+    {% assign prev_year = "" %}
+    {% for fp in sorted_fps %}
+      {% assign cur_year = fp.date | slice: 0, 4 %}
+      {% if cur_year != prev_year %}
+        {% unless forloop.first %}</div></div>{% endunless %}
+        <div class="fp-tl-row">
+          <div class="fp-tl-year">{{ cur_year }}</div>
+          <div class="fp-tl-chips">
+        {% assign prev_year = cur_year %}
+      {% endif %}
+      <button class="fp-chip fp-chip-{{ fp.type }}" data-id="{{ fp.id }}">{{ fp.name }}</button>
+      {% if forloop.last %}</div></div>{% endif %}
+    {% endfor %}
   </div>
 
-</div><!-- .fp-page -->
+</div>
 
 <script>
 (function () {
-  var DATA = {{ site.data.footprint | jsonify }};
+  /* ── Data ─────────────────────────────────────────── */
+  var RAW = '{{ site.data.footprint | jsonify | escape }}';
+  var DATA = [];
+  try { DATA = JSON.parse(RAW.replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>')); } catch(e) {}
   if (!Array.isArray(DATA)) DATA = [];
   var byId = {};
-  DATA.forEach(function (fp) { byId[fp.id] = fp; });
+  DATA.forEach(function (fp) { if (fp.id) byId[fp.id] = fp; });
 
-  var COLORS = { lived: '#FF9F0A', visited: '#30C2C2', special: '#FF375F' };
-  var W = 960, H = 500;
+  var COLORS = { lived:'#FF9F0A', visited:'#30C2C2', special:'#FF375F' };
 
+  /* ── DOM ──────────────────────────────────────────── */
   var wrap    = document.getElementById('fpMapWrap');
   var tooltip = document.getElementById('fpTooltip');
   var ttName  = document.getElementById('fpTtName');
   var ttDate  = document.getElementById('fpTtDate');
-  var svg     = wrap ? wrap.querySelector('svg') : null;
+  var svg     = wrap && wrap.querySelector('svg');
   if (!svg) return;
 
-  // ── SVG setup ────────────────────────────────
   svg.id = 'fpSvgMap';
   svg.setAttribute('preserveAspectRatio', 'none');
   svg.setAttribute('width',  '100%');
   svg.setAttribute('height', '440');
 
-  // Initial viewBox: crop Antarctica (show to ~77°S instead of ~85°S)
-  var vb = { x: 0, y: 0, w: W, h: 440 };
-  function applyVB() {
-    // Clamp to prevent scrolling fully off-screen
-    vb.w = Math.max(120, Math.min(W * 2, vb.w));
-    vb.h = Math.max(62,  Math.min(H * 2, vb.h));
-    vb.x = Math.max(-vb.w * 0.4, Math.min(W - vb.w * 0.6, vb.x));
-    vb.y = Math.max(-vb.h * 0.4, Math.min(H - vb.h * 0.6, vb.y));
-    svg.setAttribute('viewBox', vb.x.toFixed(1) + ' ' + vb.y.toFixed(1) +
-                                ' ' + vb.w.toFixed(1) + ' ' + vb.h.toFixed(1));
-  }
-  applyVB();
+  /* ── ViewBox ──────────────────────────────────────── */
+  var W = 960, H = 500;
+  var ASIA  = { x:666, y:148, w:270, h:138 }; // East/SE Asia (all markers fit)
+  var WORLD = { x:0,   y:0,   w:W,   h:440 }; // World (Antarctica cropped)
 
-  // ── Wheel zoom (bound to wrap, not svg) ──────
-  wrap.addEventListener('wheel', function (e) {
+  var vb = { x:ASIA.x, y:ASIA.y, w:ASIA.w, h:ASIA.h };
+
+  function setVB() {
+    svg.setAttribute('viewBox',
+      vb.x.toFixed(1)+' '+vb.y.toFixed(1)+' '+vb.w.toFixed(1)+' '+vb.h.toFixed(1));
+  }
+  setVB();
+
+  /* ── Zoom (window-level, passive:false overrides browser default) */
+  window.addEventListener('wheel', function (e) {
+    if (!wrap.contains(e.target)) return;
     e.preventDefault();
     tooltip.classList.remove('show');
-    var factor = e.deltaY > 0 ? 1.18 : 0.847;
-    var sr  = svg.getBoundingClientRect();
-    var mx  = vb.x + (e.clientX - sr.left) / sr.width  * vb.w;
-    var my  = vb.y + (e.clientY - sr.top)  / sr.height * vb.h;
-    vb.w *= factor; vb.h *= factor;
+    var f  = e.deltaY > 0 ? 1.2 : (1 / 1.2);
+    var sr = svg.getBoundingClientRect();
+    var mx = vb.x + (e.clientX - sr.left) / sr.width  * vb.w;
+    var my = vb.y + (e.clientY - sr.top)  / sr.height * vb.h;
+    vb.w *= f; vb.h *= f;
     vb.x = mx - (e.clientX - sr.left) / sr.width  * vb.w;
     vb.y = my - (e.clientY - sr.top)  / sr.height * vb.h;
-    applyVB();
+    setVB();
   }, { passive: false });
 
-  // ── Drag pan ──────────────────────────────────
-  var drag = { on: false, sx: 0, sy: 0, ox: 0, oy: 0 };
+  /* ── Drag pan ─────────────────────────────────────── */
+  var drag = { on: false };
   svg.addEventListener('mousedown', function (e) {
     if (e.button !== 0) return;
-    if (e.target.classList.contains('fp-pin')) return;
-    drag.on = true;
-    drag.sx = e.clientX; drag.sy = e.clientY;
-    drag.ox = vb.x;      drag.oy = vb.y;
+    if (e.target.getAttribute('class') === 'fp-pin') return;
+    drag = { on: true, sx: e.clientX, sy: e.clientY, ox: vb.x, oy: vb.y };
     e.preventDefault();
   });
   document.addEventListener('mousemove', function (e) {
@@ -315,86 +306,103 @@ html[data-mode="dark"] .fp-chip-visited { background: #30C2C222; color: #30C2C2;
     var sr = svg.getBoundingClientRect();
     vb.x = drag.ox - (e.clientX - drag.sx) / sr.width  * vb.w;
     vb.y = drag.oy - (e.clientY - drag.sy) / sr.height * vb.h;
-    applyVB();
+    setVB();
   });
   document.addEventListener('mouseup', function () { drag.on = false; });
 
-  // ── Touch pan / pinch zoom ────────────────────
-  var tc = { prev: null };
-  wrap.addEventListener('touchstart',  function (e) { tc.prev = e.touches; }, { passive: true });
+  /* ── Touch ────────────────────────────────────────── */
+  var tp = null;
+  wrap.addEventListener('touchstart',  function (e) { tp = e.touches; }, { passive: true });
   wrap.addEventListener('touchmove', function (e) {
     e.preventDefault();
     tooltip.classList.remove('show');
-    var t = e.touches, p = tc.prev;
-    if (!p) { tc.prev = t; return; }
+    var t = e.touches, p = tp;
+    if (!p) { tp = t; return; }
     var sr = svg.getBoundingClientRect();
     if (t.length === 1 && p.length >= 1) {
       vb.x -= (t[0].clientX - p[0].clientX) / sr.width  * vb.w;
       vb.y -= (t[0].clientY - p[0].clientY) / sr.height * vb.h;
-      applyVB();
+      setVB();
     } else if (t.length === 2 && p.length === 2) {
       var d0 = Math.hypot(p[0].clientX-p[1].clientX, p[0].clientY-p[1].clientY);
       var d1 = Math.hypot(t[0].clientX-t[1].clientX, t[0].clientY-t[1].clientY);
       if (d0 > 1) {
         var f  = d0 / d1;
-        var mx = ((t[0].clientX+t[1].clientX)/2 - sr.left)  / sr.width  * vb.w + vb.x;
-        var my = ((t[0].clientY+t[1].clientY)/2 - sr.top)   / sr.height * vb.h + vb.y;
+        var mx = vb.x + ((t[0].clientX+t[1].clientX)/2 - sr.left) / sr.width  * vb.w;
+        var my = vb.y + ((t[0].clientY+t[1].clientY)/2 - sr.top)  / sr.height * vb.h;
         vb.w *= f; vb.h *= f;
         vb.x = mx - ((t[0].clientX+t[1].clientX)/2 - sr.left) / sr.width  * vb.w;
         vb.y = my - ((t[0].clientY+t[1].clientY)/2 - sr.top)  / sr.height * vb.h;
-        applyVB();
+        setVB();
       }
     }
-    tc.prev = t;
+    tp = t;
   }, { passive: false });
 
-  // ── Zoom buttons ──────────────────────────────
+  /* ── Buttons ──────────────────────────────────────── */
   function zoomCenter(f) {
     tooltip.classList.remove('show');
-    var cx = vb.x + vb.w/2, cy = vb.y + vb.h/2;
+    vb.x += vb.w * (1 - f) / 2;
+    vb.y += vb.h * (1 - f) / 2;
     vb.w *= f; vb.h *= f;
-    vb.x = cx - vb.w/2; vb.y = cy - vb.h/2;
-    applyVB();
+    setVB();
   }
   document.getElementById('fpZoomIn').onclick    = function () { zoomCenter(0.65); };
   document.getElementById('fpZoomOut').onclick   = function () { zoomCenter(1.54); };
-  document.getElementById('fpZoomReset').onclick = function () {
-    vb = { x:0, y:0, w:W, h:440 }; applyVB();
+  document.getElementById('fpViewAsia').onclick  = function () {
+    vb = { x:ASIA.x, y:ASIA.y, w:ASIA.w, h:ASIA.h }; setVB();
+  };
+  document.getElementById('fpViewWorld').onclick = function () {
+    vb = { x:WORLD.x, y:WORLD.y, w:WORLD.w, h:WORLD.h }; setVB();
   };
 
-  // ── Marker hover + click ──────────────────────
-  svg.querySelectorAll('.fp-pin').forEach(function (pin) {
-    pin.addEventListener('mouseenter', function () {
-      var pr = pin.getBoundingClientRect();
-      var wr = wrap.getBoundingClientRect();
-      tooltip.style.left = (pr.left + pr.width/2 - wr.left) + 'px';
-      tooltip.style.top  = (pr.top  - wr.top) + 'px';
-      ttName.textContent = pin.dataset.name;
-      ttDate.textContent = pin.dataset.date;
-      tooltip.classList.add('show');
-    });
-    pin.addEventListener('mouseleave', function () { tooltip.classList.remove('show'); });
-    pin.addEventListener('click', function (e) {
-      e.stopPropagation();
-      tooltip.classList.remove('show');
-      openDetail(pin.dataset.id);
-    });
+  /* ── Hover: SVG event delegation ─────────────────── */
+  svg.addEventListener('mouseover', function (e) {
+    var t = e.target;
+    if (!t || t.getAttribute('class') !== 'fp-pin') return;
+    var pr = t.getBoundingClientRect();
+    var wr = wrap.getBoundingClientRect();
+    tooltip.style.left = (pr.left + pr.width / 2 - wr.left) + 'px';
+    tooltip.style.top  = (pr.top  - wr.top) + 'px';
+    ttName.textContent = t.getAttribute('data-name') || '';
+    ttDate.textContent = t.getAttribute('data-date') || '';
+    tooltip.classList.add('show');
+  });
+  svg.addEventListener('mouseout', function (e) {
+    if (e.relatedTarget && e.relatedTarget.getAttribute &&
+        e.relatedTarget.getAttribute('class') === 'fp-pin') return;
+    tooltip.classList.remove('show');
   });
 
-  // ── Place list chips ──────────────────────────
+  /* ── Click: SVG event delegation ─────────────────── */
+  svg.addEventListener('click', function (e) {
+    var t = e.target;
+    if (!t || t.getAttribute('class') !== 'fp-pin') return;
+    tooltip.classList.remove('show');
+    openDetail(t.getAttribute('data-id'));
+  });
+
+  /* ── Place list chips ─────────────────────────────── */
   document.querySelectorAll('.fp-chip').forEach(function (chip) {
-    chip.addEventListener('click', function () { openDetail(chip.dataset.id); });
+    chip.addEventListener('click', function () {
+      openDetail(chip.getAttribute('data-id'));
+    });
   });
 
-  // ── Detail panel ──────────────────────────────
+  /* ── Detail panel ─────────────────────────────────── */
   function openDetail(id) {
     var fp = byId[id];
-    // Fallback: use SVG data attributes if DATA missing
     if (!fp) {
-      var pin = svg.querySelector('[data-id="'+id+'"]');
+      // Fallback: build from SVG data attributes
+      var pin = svg.querySelector('[data-id="' + id + '"]');
       if (!pin) return;
-      fp = { id:id, name:pin.dataset.name, date:pin.dataset.date,
-             type:pin.dataset.type, description:'', content:[] };
+      fp = {
+        id:   id,
+        name: pin.getAttribute('data-name') || id,
+        date: pin.getAttribute('data-date') || '',
+        type: pin.getAttribute('data-type') || 'visited',
+        description: '', content: []
+      };
     }
     document.getElementById('fpMapView').style.display = 'none';
     document.getElementById('fpDetail').style.display  = 'block';
@@ -406,17 +414,18 @@ html[data-mode="dark"] .fp-chip-visited { background: #30C2C222; color: #30C2C2;
         body += '<p class="fp-body-text">' + b.value + '</p>';
       else if (b.type === 'image')
         body += '<figure class="fp-body-img"><img src="' + b.src + '" alt="' +
-                (b.caption||'') + '" loading="lazy">' +
-                (b.caption ? '<figcaption>'+b.caption+'</figcaption>' : '') +
+                (b.caption || '') + '" loading="lazy">' +
+                (b.caption ? '<figcaption>' + b.caption + '</figcaption>' : '') +
                 '</figure>';
     });
     document.getElementById('fpDetailInner').innerHTML =
       '<h2 class="fp-detail-name">' + fp.name + '</h2>' +
       '<div class="fp-detail-info">' +
         '<span class="fp-detail-date">' + fp.date + '</span>' +
-        '<span class="fp-detail-tag" style="background:'+fill+'22;color:'+fill+';border:1px solid '+fill+'44">' + tlabel + '</span>' +
+        '<span class="fp-detail-tag" style="background:' + fill + '22;color:' + fill +
+        ';border:1px solid ' + fill + '44">' + tlabel + '</span>' +
       '</div>' +
-      '<p class="fp-detail-desc">' + (fp.description||'') + '</p>' +
+      '<p class="fp-detail-desc">' + (fp.description || '') + '</p>' +
       body;
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
