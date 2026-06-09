@@ -261,7 +261,7 @@ html[data-mode="dark"] .fp-chip-visited { background:#30C2C222; color:#30C2C2; b
   if (!svg) return;
 
   svg.id = 'fpSvgMap';
-  svg.setAttribute('preserveAspectRatio', 'none');
+  svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
   svg.setAttribute('width',  '100%');
   svg.setAttribute('height', '440');
 
@@ -294,18 +294,20 @@ html[data-mode="dark"] .fp-chip-visited { background:#30C2C222; color:#30C2C2; b
   }, { passive: false });
 
   /* ── Drag pan ─────────────────────────────────────── */
-  var drag = { on: false };
+  var drag = { on: false, moved: false };
   svg.addEventListener('mousedown', function (e) {
     if (e.button !== 0) return;
-    if (e.target.getAttribute('class') === 'fp-pin') return;
-    drag = { on: true, sx: e.clientX, sy: e.clientY, ox: vb.x, oy: vb.y };
+    drag = { on: true, moved: false, sx: e.clientX, sy: e.clientY, ox: vb.x, oy: vb.y };
     e.preventDefault();
   });
   document.addEventListener('mousemove', function (e) {
     if (!drag.on) return;
+    var dx = e.clientX - drag.sx, dy = e.clientY - drag.sy;
+    if (!drag.moved && Math.hypot(dx, dy) < 4) return;
+    drag.moved = true;
     var sr = svg.getBoundingClientRect();
-    vb.x = drag.ox - (e.clientX - drag.sx) / sr.width  * vb.w;
-    vb.y = drag.oy - (e.clientY - drag.sy) / sr.height * vb.h;
+    vb.x = drag.ox - dx / sr.width  * vb.w;
+    vb.y = drag.oy - dy / sr.height * vb.h;
     setVB();
   });
   document.addEventListener('mouseup', function () { drag.on = false; });
@@ -360,10 +362,14 @@ html[data-mode="dark"] .fp-chip-visited { background:#30C2C222; color:#30C2C2; b
   svg.addEventListener('mouseover', function (e) {
     var t = e.target;
     if (!t || t.getAttribute('class') !== 'fp-pin') return;
-    var pr = t.getBoundingClientRect();
+    var cx = parseFloat(t.getAttribute('cx'));
+    var cy = parseFloat(t.getAttribute('cy'));
+    var pt = svg.createSVGPoint();
+    pt.x = cx; pt.y = cy;
+    var screenPt = pt.matrixTransform(svg.getScreenCTM());
     var wr = wrap.getBoundingClientRect();
-    tooltip.style.left = (pr.left + pr.width / 2 - wr.left) + 'px';
-    tooltip.style.top  = (pr.top  - wr.top) + 'px';
+    tooltip.style.left = (screenPt.x - wr.left) + 'px';
+    tooltip.style.top  = (screenPt.y - wr.top) + 'px';
     ttName.textContent = t.getAttribute('data-name') || '';
     ttDate.textContent = t.getAttribute('data-date') || '';
     tooltip.classList.add('show');
@@ -376,6 +382,7 @@ html[data-mode="dark"] .fp-chip-visited { background:#30C2C222; color:#30C2C2; b
 
   /* ── Click: SVG event delegation ─────────────────── */
   svg.addEventListener('click', function (e) {
+    if (drag.moved) return;
     var t = e.target;
     if (!t || t.getAttribute('class') !== 'fp-pin') return;
     tooltip.classList.remove('show');
