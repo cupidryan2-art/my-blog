@@ -265,14 +265,26 @@ html[data-mode="dark"] .fp-chip-visited { background:#30C2C222; color:#30C2C2; b
   svg.setAttribute('width',  '100%');
   svg.setAttribute('height', '440');
 
+  /* ── Pin radii (override SVG defaults) ───────────── */
+  svg.querySelectorAll('.fp-pin').forEach(function (p) {
+    p.setAttribute('r', p.getAttribute('data-type') === 'lived' ? '6' : '5');
+  });
+
   /* ── ViewBox ──────────────────────────────────────── */
-  var W = 960, H = 500;
-  var ASIA  = { x:666, y:148, w:270, h:138 }; // East/SE Asia (all markers fit)
-  var WORLD = { x:0,   y:0,   w:W,   h:440 }; // World (Antarctica cropped)
+  var W = 960;
+  var ASIA  = { x:660, y:145, w:280, h:145 };
+  var WORLD = { x:0,   y:0,   w:W,   h:440 };
+  var MIN_W = 100, MAX_W = 960;
+  var RATIO = 440 / 960;
 
   var vb = { x:ASIA.x, y:ASIA.y, w:ASIA.w, h:ASIA.h };
 
+  function clampVB() {
+    vb.w = Math.max(MIN_W, Math.min(MAX_W, vb.w));
+    vb.h = Math.max(MIN_W * RATIO, Math.min(MAX_W * RATIO, vb.h));
+  }
   function setVB() {
+    clampVB();
     svg.setAttribute('viewBox',
       vb.x.toFixed(1)+' '+vb.y.toFixed(1)+' '+vb.w.toFixed(1)+' '+vb.h.toFixed(1));
   }
@@ -280,7 +292,7 @@ html[data-mode="dark"] .fp-chip-visited { background:#30C2C222; color:#30C2C2; b
 
   /* ── Zoom (window-level, passive:false overrides browser default) */
   window.addEventListener('wheel', function (e) {
-    if (!wrap.contains(e.target)) return;
+    if (!e.target || !e.target.nodeType || !wrap.contains(e.target)) return;
     e.preventDefault();
     tooltip.classList.remove('show');
     var f  = e.deltaY > 0 ? 1.2 : (1 / 1.2);
