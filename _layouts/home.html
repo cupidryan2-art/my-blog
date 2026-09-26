@@ -25,7 +25,8 @@ layout: default
 <section class="qlog-posts">
   <h2 class="posts-heading">Recent Posts</h2>
 
-  {% for post in site.posts limit:10 %}
+  {% assign visible_posts = paginator.posts | default: site.posts %}
+  {% for post in visible_posts %}
   <article class="post-card">
     <a href="{{ post.url | relative_url }}" class="post-card-link">
       <h3 class="post-card-title">{{ post.title }}</h3>
@@ -40,3 +41,11 @@ layout: default
   </article>
   {% endfor %}
 </section>
+
+{% if paginator.total_pages > 1 %}
+<nav class="qlog-pagination" aria-label="文章分页">
+  {% if paginator.previous_page %}<a rel="prev" href="{{ paginator.previous_page_path | relative_url }}">← 上一页</a>{% endif %}
+  <span>第 {{ paginator.page }} / {{ paginator.total_pages }} 页</span>
+  {% if paginator.next_page %}<a rel="next" href="{{ paginator.next_page_path | relative_url }}">下一页 →</a>{% endif %}
+</nav>
+{% endif %}

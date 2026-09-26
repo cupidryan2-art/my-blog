@@ -16,7 +16,7 @@ layout: default
       {% if page.tags.size > 0 %}
       <span class="meta-sep">·</span>
       {% for tag in page.tags %}
-      <a href="{{ '/tags/' | append: tag | downcase | replace: ' ', '-' | relative_url }}" class="post-tag-inline">{{ tag }}</a>
+      <a href="{% assign tag_slug = tag | slugify | url_encode %}{{ '/tags/' | append: tag_slug | append: '/' | relative_url }}" class="post-tag-inline">{{ tag }}</a>
       {% endfor %}
       {% endif %}
     </div>
@@ -24,6 +24,12 @@ layout: default
 
   <hr class="page-divider">
 
+  {% if site.toc and page.toc %}
+  <details class="qlog-toc" id="qlogToc" hidden>
+    <summary>文章目录</summary>
+    <nav aria-label="文章目录"></nav>
+  </details>
+  {% endif %}
   <div class="post-content">
     {{ content }}
   </div>
@@ -32,7 +38,7 @@ layout: default
     {% if page.tags.size > 0 %}
     <div class="post-tags-footer">
       {% for tag in page.tags %}
-      <a href="{{ '/tags/' | append: tag | downcase | replace: ' ', '-' | relative_url }}" class="tag-pill-sm">{{ tag }}</a>
+      <a href="{% assign tag_slug = tag | slugify | url_encode %}{{ '/tags/' | append: tag_slug | append: '/' | relative_url }}" class="tag-pill-sm">{{ tag }}</a>
       {% endfor %}
     </div>
     {% endif %}
@@ -41,16 +47,13 @@ layout: default
   </footer>
 </article>
 
-<!-- Twikoo Comments -->
-<section class="qlog-comments">
-  <h2 class="comments-heading">Comments</h2>
-  <div id="tcomment"></div>
-  <script src="https://cdn.jsdelivr.net/npm/twikoo@1.6.39/dist/twikoo.all.min.js"></script>
-  <script>
-    twikoo.init({
-      envId: '{{ site.twikoo.envId }}',
-      el: '#tcomment',
-      lang: 'zh-CN'
-    });
-  </script>
+<script defer src="{{ '/assets/js/qlog-post.js' | relative_url }}"></script>
+{% if page.comments and site.twikoo.envId != empty %}
+<section class="qlog-comments" data-comments-enabled>
+  <h2 class="comments-heading">评论</h2>
+  <div id="tcomment" data-env="{{ site.twikoo.envId | escape }}"></div>
+  <p id="commentStatus" role="status">正在载入评论…</p>
+  <script defer src="https://cdn.jsdelivr.net/npm/twikoo@1.6.39/dist/twikoo.all.min.js"></script>
+  <script defer src="{{ '/assets/js/qlog-comments.js' | relative_url }}"></script>
 </section>
+{% endif %}
