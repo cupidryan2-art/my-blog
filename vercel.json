@@ -1,5 +1,5 @@
 {
-  "buildCommand": "bundle exec jekyll build --config _config.yml,_config_vercel.yml",
+  "buildCommand": "ruby scripts/build-vercel.rb",
   "outputDirectory": "_site",
   "installCommand": "bundle install",
   "framework": null,

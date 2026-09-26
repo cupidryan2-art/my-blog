@@ -81,6 +81,13 @@ exclude:
   - LICENSE
   - rollup.config.js
   - package*.json
+  - AGENTS.md
+  - TASK-footprint-map-v2.md
+  - scripts
+  - tests
+  - .claude
+  - .verify
+  - vercel.json
 
 # Twikoo comments (fill envId after deploying)
 twikoo:
