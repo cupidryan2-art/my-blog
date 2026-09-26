@@ -2,6 +2,8 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 QLOG_ROOT="$PWD"
+# Keep Bundler configuration/cache rooted in the checkout while building isolated sources.
+export BUNDLE_GEMFILE="$QLOG_ROOT/Gemfile"
 QLOG_VERIFY_DIR="${VERIFY_DIR:-$(mktemp -d "${TMPDIR:-/tmp}/qlog-verify.XXXXXX")}"
 mkdir -p "$QLOG_VERIFY_DIR"
 QLOG_SOURCE_DIR="$(mktemp -d "$QLOG_VERIFY_DIR/source.XXXXXX")"
