@@ -24,6 +24,11 @@ theme_mode:
 
 avatar: /assets/img/avatar.jpg
 
+# Default share image (og:image / twitter:image) and X account for jekyll-seo-tag
+social_preview_image: /assets/img/avatar.jpg
+twitter:
+  username: cupidryan2
+
 toc: true
 
 paginate: 10

@@ -1,0 +1,9 @@
+{%- comment -%}
+  Chirpy metadata hook (included at the end of <head> by the theme's head.html). Only site-level variables are used here, so it is safe under include_cached.
+  qlog_noindex is injected by scripts/build-vercel.rb only (the Vercel mirror is the secondary site).
+  seo-tag already emits the canonical link; do not add a second one here.
+{%- endcomment -%}
+{% if site.qlog_noindex %}<meta name="robots" content="noindex,follow">{% endif %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&amp;family=LXGW+WenKai+TC:wght@400;700&amp;family=LXGW+WenKai:wght@400;700&amp;family=Inter:wght@400;500;600&amp;display=swap">

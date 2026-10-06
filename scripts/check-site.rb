@@ -10,6 +10,8 @@ base = ARGV.fetch(1, '/my-blog')
 origin = ARGV.fetch(2, 'https://cupidryan2-art.github.io')
 scripts_only = ARGV.include?('--scripts-only')
 errors = []
+# Pages build uses a base path; the Vercel mirror (empty base) must be noindex, Pages must not.
+expect_noindex = base.empty?
 html = root.glob('**/*.html').to_h { |p| [p, Nokogiri::HTML(p.read)] }
 html.each do |path, doc|
   label = path.relative_path_from(root)
@@ -25,6 +27,15 @@ html.each do |path, doc|
   errors << "#{label}: missing page title" if title.empty? || title.start_with?('|')
   canonical = doc.at_css('link[rel=canonical]')&.[]('href')
   errors << "#{label}: invalid canonical #{canonical.inspect}" unless canonical&.start_with?(origin + base + '/')
+  robots_meta = doc.css('meta[name=robots]').map { |m| m['content'].to_s }.join(',')
+  if expect_noindex
+    errors << "#{label}: missing noindex robots meta" unless robots_meta.include?('noindex')
+  elsif robots_meta.include?('noindex')
+    errors << "#{label}: unexpected noindex robots meta"
+  end
+  if label.to_s == 'index.html' || label.to_s.start_with?('posts/')
+    errors << "#{label}: missing meta description" if doc.at_css('meta[name=description]')&.[]('content').to_s.strip.empty?
+  end
   doc.css('script[src], link[rel=stylesheet], img[src]').each do |element|
     value = element['src'] || element['href']
     next if value.nil? || value.match?(%r{\A(?:https?:|data:|//)})
@@ -48,6 +59,12 @@ unless scripts_only
   sitemap = Nokogiri::XML(root.join('sitemap.xml').read)
   sitemap.xpath('//*[local-name()="loc"]').each do |node|
     errors << "sitemap: relative/wrong URL #{node.text}" unless node.text.start_with?(origin + base + '/')
+  end
+  robots = root.join('robots.txt')
+  if robots.file?
+    errors << 'robots.txt: missing Sitemap line' unless robots.read.match?(%r{^Sitemap: #{Regexp.escape(origin + base)}/sitemap\.xml\s*$})
+  else
+    errors << 'robots.txt: missing'
   end
   %w[AGENTS.md TASK-footprint-map-v2.md README.md scripts .github .claude vercel.json].each do |name|
     errors << "private/development artifact published: #{name}" if root.join(name).exist?

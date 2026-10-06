@@ -26,4 +26,10 @@ Test at 375, 768 and 1280px: search, sidebar, font persistence, light/dark/syste
 
 CI runs `scripts/browser-smoke.cjs` with Playwright Chromium against production Pages output. Browser test dependencies are installed only in the runner temporary directory; there is no application npm build.
 
+## Deployment and dependencies
+
+GitHub Pages (`https://cupidryan2-art.github.io/my-blog`, baseurl `/my-blog`) is the primary site. Vercel is a secondary site: `scripts/build-vercel.rb` injects `qlog_noindex: true`, which `_includes/metadata-hook.html` renders as `<meta name="robots" content="noindex,follow">`, and `scripts/check-site.rb` enforces it (and its absence on the Pages build).
+
+`.github/dependabot.yml` opens weekly update PRs for GitHub Actions and Bundler. They are proposals only: review each manually (no auto-merge), and do not accept gem additions without explicit confirmation. The Playwright version in CI is pinned deliberately.
+
 See AGENTS.md for deployment constraints and source boundaries. Existing untracked posts are not publication-ready just because they build.

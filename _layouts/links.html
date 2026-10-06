@@ -44,8 +44,8 @@ layout: default
       <div class="link-card-top">
         <div class="link-avatar">
           {% if link.avatar and link.avatar != "" %}
-            <img src="{{ link.avatar }}" alt="{{ link.name }}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-            <span class="link-avatar-fallback" style="display:none">{{ link.name | slice: 0 }}</span>
+            <img src="{{ link.avatar }}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" data-link-avatar>
+            <span class="link-avatar-fallback" hidden>{{ link.name | slice: 0 }}</span>
           {% else %}
             <span class="link-avatar-fallback">{{ link.name | slice: 0 }}</span>
           {% endif %}
@@ -58,13 +58,13 @@ layout: default
       </div>
       <p class="link-desc">{{ link.desc }}</p>
       <div class="link-actions">
-        <a href="{{ link.url }}" target="_blank" rel="noopener" class="link-btn link-btn-primary">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        <a href="{{ link.url }}" target="_blank" rel="noopener noreferrer" class="link-btn link-btn-primary" aria-label="访问网站：{{ link.name | escape }}（在新窗口打开）">
+          <svg aria-hidden="true" focusable="false" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
           访问网站
         </a>
         {% if link.rss and link.rss != "" %}
-        <a href="{{ link.rss }}" target="_blank" rel="noopener" class="link-btn link-btn-rss">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="19" r="2"/><path d="M4 4a16 16 0 0116 16"/><path d="M4 11a9 9 0 019 9"/></svg>
+        <a href="{{ link.rss }}" target="_blank" rel="noopener noreferrer" class="link-btn link-btn-rss" aria-label="订阅 {{ link.name | escape }} 的 RSS（在新窗口打开）">
+          <svg aria-hidden="true" focusable="false" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="19" r="2"/><path d="M4 4a16 16 0 0116 16"/><path d="M4 11a9 9 0 019 9"/></svg>
           RSS
         </a>
         {% endif %}
@@ -76,7 +76,7 @@ layout: default
   <!-- Apply section -->
   <div class="links-apply">
     <h3 class="links-apply-title">申请友链</h3>
-    <p class="links-apply-desc">如果你也有自己的博客，欢迎通过 <a href="https://github.com/cupidryan2-art/my-blog/issues/new" target="_blank" rel="noopener">GitHub 留言申请友链</a>，格式如下：</p>
+    <p class="links-apply-desc">如果你也有自己的博客，欢迎通过 <a href="https://github.com/cupidryan2-art/my-blog/issues/new" target="_blank" rel="noopener noreferrer" aria-label="GitHub 留言申请友链（在新窗口打开）">GitHub 留言申请友链</a>，格式如下：</p>
     <pre class="links-apply-code">站点名称：
 站点地址：
 站点描述：
@@ -84,3 +84,5 @@ RSS 地址：（可选）</pre>
   </div>
 
 </div>
+
+<script defer src="{{ '/assets/js/qlog-links.js' | relative_url }}"></script>

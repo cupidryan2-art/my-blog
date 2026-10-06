@@ -11,8 +11,8 @@ title: About
     <p class="about-role">Data Science · XMUM</p>
     <p class="about-bio">Exploring the intersection of data, design, and storytelling. I believe in the power of clean code and clear thinking.</p>
     <div class="about-links">
-      <a href="https://github.com/cupidryan2-art" target="_blank" class="about-link-btn">GitHub ↗</a>
-      <a href="https://x.com/cupidryan2" target="_blank" class="about-link-btn">X ↗</a>
+      <a href="https://github.com/cupidryan2-art" target="_blank" rel="noopener noreferrer" class="about-link-btn" aria-label="GitHub（在新窗口打开）">GitHub ↗</a>
+      <a href="https://x.com/cupidryan2" target="_blank" rel="noopener noreferrer" class="about-link-btn" aria-label="X（在新窗口打开）">X ↗</a>
     </div>
   </div>
 </div>

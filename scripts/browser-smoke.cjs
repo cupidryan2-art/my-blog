@@ -79,6 +79,21 @@ const path = require('node:path');
     await page.locator('#qlogToc').waitFor({ state: 'visible' });
     assert.ok(await page.locator('#qlogToc a').count() > 3);
     assert.equal(await page.locator('script[src*=twikoo]').count(), 0);
+    const a11yPages = ['/posts/' + encodeURIComponent('数论') + '/', '/', '/links/', '/about/'];
+    for (const route of a11yPages) {
+      await page.goto(origin + route);
+      const report = await page.evaluate(() => {
+        const name = el => (el.getAttribute('aria-label') || el.textContent || '').trim();
+        return {
+          unnamed: [...document.querySelectorAll('.share-btn, .sidebar-social-icon')].filter(el => !name(el)).map(el => el.outerHTML.slice(0, 80)),
+          noAlt: [...document.querySelectorAll('img')].filter(img => !img.hasAttribute('alt')).map(img => img.getAttribute('src')),
+          noNoopener: [...document.querySelectorAll('a[target="_blank"]')].filter(a => !/\bnoopener\b/.test(a.rel)).map(a => a.href)
+        };
+      });
+      assert.deepEqual(report.unnamed, [], route + ': share/social controls need an accessible name');
+      assert.deepEqual(report.noAlt, [], route + ': img without alt attribute');
+      assert.deepEqual(report.noNoopener, [], route + ': target=_blank without noopener');
+    }
     assert.deepEqual(errors, [], 'First-party production page errors');
     console.log('Browser smoke passed: navigation, search, font persistence, pagination, 30 places, details/images/focus, zoom, TOC and 9 visual variants.');
   } finally { await browser.close(); }
