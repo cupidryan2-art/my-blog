@@ -1,10 +1,12 @@
 (function () {
   'use strict';
-  // 友链头像加载失败时，隐藏 <img> 并显示紧随其后的首字母 fallback。
+  // 友链头像加载失败时，隐藏头像并显示同一容器内的首字母 fallback。
+  // Chirpy 的 refactor-content 会把 <img> 包进 <a class="img-link">，所以不能依赖 nextElementSibling。
   function showFallback(img) {
-    var fallback = img.nextElementSibling;
-    img.hidden = true;
-    if (fallback && fallback.classList.contains('link-avatar-fallback')) fallback.hidden = false;
+    var box = img.closest('.link-avatar');
+    var fallback = box && box.querySelector('.link-avatar-fallback');
+    (img.closest('a.img-link') || img).hidden = true;
+    if (fallback) fallback.hidden = false;
   }
   function init() {
     var imgs = document.querySelectorAll('img[data-link-avatar]');

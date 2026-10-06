@@ -1440,7 +1440,8 @@ a[class*="tag"],
 /* Must follow the display:flex rule above: the hidden attribute (set by the
    avatar-error fallback) is otherwise overridden by author CSS. */
 .link-avatar-fallback[hidden],
-.link-avatar img[hidden] {
+.link-avatar img[hidden],
+.link-avatar a.img-link[hidden] {
   display: none;
 }
 

@@ -44,7 +44,7 @@ layout: default
       <div class="link-card-top">
         <div class="link-avatar">
           {% if link.avatar and link.avatar != "" %}
-            <img src="{{ link.avatar }}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" data-link-avatar>
+            <img src="{{ link.avatar }}" alt="" decoding="async" referrerpolicy="no-referrer" data-link-avatar>
             <span class="link-avatar-fallback" hidden>{{ link.name | slice: 0 }}</span>
           {% else %}
             <span class="link-avatar-fallback">{{ link.name | slice: 0 }}</span>
