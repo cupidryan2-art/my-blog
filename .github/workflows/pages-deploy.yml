@@ -11,11 +11,13 @@ permissions:
 
 concurrency:
   group: pages-${{ github.ref }}
-  cancel-in-progress: true
+  # Cancel superseded PR runs only; never interrupt a main-branch deploy.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
         with:
@@ -27,24 +29,15 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Verify both production deployments
-        run: bash scripts/verify.sh
-        env:
-          VERIFY_DIR: ${{ runner.temp }}/qlog-verify
       - name: Install isolated browser test runtime
         run: |
           npm install --prefix "$RUNNER_TEMP/qlog-browser" --no-package-lock playwright@1.58.2
           "$RUNNER_TEMP/qlog-browser/node_modules/.bin/playwright" install --with-deps chromium
-      - name: Browser smoke and responsive screenshots
-        run: |
-          mkdir -p "$RUNNER_TEMP/qlog-http/my-blog"
-          cp -R "$RUNNER_TEMP/qlog-verify/pages/." "$RUNNER_TEMP/qlog-http/my-blog/"
-          python3 -m http.server 4173 --bind 127.0.0.1 --directory "$RUNNER_TEMP/qlog-http" > "$RUNNER_TEMP/qlog-http.log" 2>&1 &
-          server_pid=$!
-          trap 'kill "$server_pid"' EXIT
-          for attempt in $(seq 1 30); do curl -fsS http://127.0.0.1:4173/my-blog/ > /dev/null && break; sleep 1; done
-          NODE_PATH="$RUNNER_TEMP/qlog-browser/node_modules" node scripts/browser-smoke.cjs
+      - name: Verify (data, both production builds, site checks, htmlproofer, browser smoke)
+        run: bash scripts/verify.sh
         env:
+          VERIFY_DIR: ${{ runner.temp }}/qlog-verify
+          QLOG_PLAYWRIGHT_DIR: ${{ runner.temp }}/qlog-browser
           SCREENSHOT_DIR: ${{ runner.temp }}/qlog-screenshots
       - uses: actions/upload-artifact@v4
         if: always()
@@ -63,6 +56,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
+    timeout-minutes: 10
     permissions:
       pages: write
       id-token: write

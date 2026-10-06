@@ -1,10 +1,5 @@
 /* ===== Qlog — Editorial Premium Design ===== */
 
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@300;400;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=LXGW+WenKai:wght@300;400;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
-
 /* ==============================
    TOKENS
    ============================== */
@@ -36,6 +31,9 @@
   --border: rgba(0, 0, 0, 0.08);
   --code-bg: #f2f2f5;
   --shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  --selection-bg: rgba(0, 0, 0, 0.08);
+  --scrollbar-thumb: rgba(128, 128, 128, 0.15);
+  --scrollbar-thumb-hover: rgba(128, 128, 128, 0.3);
 
   --body-bg: var(--bg);
   --sidebar-bg: #fff;
@@ -68,6 +66,9 @@
   --border: rgba(255, 255, 255, 0.16);
   --code-bg: var(--bg-alt);
   --shadow: none;
+  --selection-bg: rgba(255, 255, 255, 0.12);
+  --scrollbar-thumb: rgba(128, 128, 128, 0.15);
+  --scrollbar-thumb-hover: rgba(128, 128, 128, 0.3);
   --body-bg: var(--bg);
   --sidebar-bg: var(--bg);
   --text-color: var(--text-1);
@@ -107,10 +108,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 ::selection {
-  background: rgba(0, 0, 0, 0.08);
-}
-html[data-mode="dark"] ::selection {
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--selection-bg);
 }
 
 /* ==============================
@@ -857,9 +855,9 @@ a[class*="tag"],
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  background: rgba(128, 128, 128, 0.15);
+  background: var(--scrollbar-thumb);
   border-radius: var(--r-pill);
-  &:hover { background: rgba(128, 128, 128, 0.3); }
+  &:hover { background: var(--scrollbar-thumb-hover); }
 }
 
 /* ==============================
@@ -1056,6 +1054,14 @@ a[class*="tag"],
     color: var(--text-3);
     text-decoration: none;
     transition: all 0.2s var(--ease);
+    position: relative;
+
+    /* Enlarge the tap target to 40px without changing the visual size. */
+    &::after {
+      content: "";
+      position: absolute;
+      inset: -6px;
+    }
 
     &:hover {
       color: var(--text-1);
@@ -1099,6 +1105,14 @@ a[class*="tag"],
     text-decoration: none;
     cursor: pointer;
     transition: all 0.2s var(--ease);
+    position: relative;
+
+    /* Enlarge the tap target to 44px without changing the visual size. */
+    &::after {
+      content: "";
+      position: absolute;
+      inset: -6px;
+    }
 
     &:hover {
       color: var(--text-1);
@@ -1423,6 +1437,14 @@ a[class*="tag"],
   font-weight: 700;
 }
 
+/* Must follow the display:flex rule above: the hidden attribute (set by the
+   avatar-error fallback) is otherwise overridden by author CSS. */
+.link-avatar-fallback[hidden],
+.link-avatar img[hidden],
+.link-avatar a.img-link[hidden] {
+  display: none;
+}
+
 .link-info {
   flex: 1;
   min-width: 0;
@@ -1476,6 +1498,7 @@ a[class*="tag"],
   font-size: 0.72rem;
   font-weight: 500;
   padding: 5px 12px;
+  min-height: 32px;
   border-radius: var(--r-pill);
   text-decoration: none !important;
   transition: all 0.2s var(--ease);
