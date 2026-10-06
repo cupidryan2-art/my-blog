@@ -87,6 +87,7 @@ exclude:
   - rollup.config.js
   - package*.json
   - AGENTS.md
+  - CLAUDE.md
   - TASK-footprint-map-v2.md
   - scripts
   - tests

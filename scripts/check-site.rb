@@ -66,7 +66,7 @@ unless scripts_only
   else
     errors << 'robots.txt: missing'
   end
-  %w[AGENTS.md TASK-footprint-map-v2.md README.md scripts .github .claude vercel.json].each do |name|
+  %w[AGENTS.md CLAUDE.md TASK-footprint-map-v2.md README.md scripts .github .claude vercel.json].each do |name|
     errors << "private/development artifact published: #{name}" if root.join(name).exist?
   end
   first = html.fetch(root.join('index.html'))
